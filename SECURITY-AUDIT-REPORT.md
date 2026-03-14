@@ -79,7 +79,7 @@ logs/
 
 ### 1. `.env.example`
 
-**位置**: `/home/admin/.openclaw/workspace/ClawMissionPanel/.env.example`
+**位置**: `<workspace>/ClawMissionPanel/.env.example`
 
 **内容**:
 ```bash
@@ -106,7 +106,7 @@ API_KEY=your_api_key_here
 
 ### 2. `docs/SECURITY-CONFIG.md`
 
-**位置**: `/home/admin/.openclaw/workspace/ClawMissionPanel/docs/SECURITY-CONFIG.md`
+**位置**: `<workspace>/ClawMissionPanel/docs/SECURITY-CONFIG.md`
 
 **内容**:
 - ⚠️ 绝对不要提交到 Git 的文件列表
