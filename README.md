@@ -299,10 +299,9 @@ GET /api/tasks/stats
 
 获取更多 OpenClaw 实战教程和最新更新：
 
-<div align="center">
-  <img src="assets/qrcode-wechat.jpg" alt="公众号二维码" width="200"/>
-  <p>扫码关注，获取最新文章 📖</p>
-</div>
+**公众号名称**: 小云实验室（待更新）
+
+> 📢 公众号正在申请中，敬请期待！
 
 ### 🤝 商业合作
 
