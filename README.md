@@ -290,16 +290,19 @@ GET /api/tasks/stats
 
 ### ☕ 请作者喝杯咖啡
 
-- **支付宝打赏**: [二维码图片位置 - 请自行补充]
-- **微信打赏**: [二维码图片位置 - 请自行补充]
-- **爱发电**: [链接位置 - 请自行补充]
+<div align="center">
+  <img src="assets/alipay-qrcode.jpg" alt="支付宝打赏二维码" width="200"/>
+  <p>扫码请作者喝杯咖啡 ☕</p>
+</div>
 
 ### 📱 关注公众号
 
 获取更多 OpenClaw 实战教程和最新更新：
 
-- **公众号名称**: [请自行补充]
-- **公众号二维码**: [二维码图片位置 - 请自行补充]
+<div align="center">
+  <img src="assets/qrcode-wechat.jpg" alt="公众号二维码" width="200"/>
+  <p>扫码关注，获取最新文章 📖</p>
+</div>
 
 ### 🤝 商业合作
 
