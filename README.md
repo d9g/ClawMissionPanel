@@ -290,28 +290,30 @@ GET /api/tasks/stats
 
 ### ☕ 请作者喝杯咖啡
 
-- **支付宝打赏**: [二维码图片位置 - 请自行补充]
-- **微信打赏**: [二维码图片位置 - 请自行补充]
-- **爱发电**: [链接位置 - 请自行补充]
+- **支付宝打赏**:
+- <img src="https://github.com/d9g/ClawMissionPanel/blob/master/docs/alipay.jpg" alt="支付宝" width="200" />
+- **微信打赏**:
+- <img src="https://github.com/d9g/ClawMissionPanel/blob/master/docs/wechatpay.jpg" alt="微信支付" width="200" />
 
 ### 📱 关注公众号
 
 获取更多 OpenClaw 实战教程和最新更新：
 
-- **公众号名称**: [请自行补充]
-- **公众号二维码**: [二维码图片位置 - 请自行补充]
+- **公众号名称**: 老杨讲理
+- **公众号二维码**:
+- <img src="https://github.com/d9g/ClawMissionPanel/blob/master/docs/qrcode.jpg" alt="微信公众号" width="200" />
 
 ### 🤝 商业合作
 
-- **技术支持**: 邮箱联系
-- **定制开发**: 邮箱联系
-- **企业培训**: 邮箱联系
+- **技术支持**: 88278016@qq.com
+- **定制开发**: 88278016@qq.com
+- **企业培训**: 88278016@qq.com
 
 ### 🔗 友情链接
 
 - **文档中心**: https://yun.webyoung.cn/docs/
 - **任务板演示**: https://yun.webyoung.cn/task-board/
-- **博客文章**: [链接位置 - 请自行补充]
+- **博客文章**: webyoung.cn
 
 ---
 
@@ -337,9 +339,9 @@ MIT License - 详见 [LICENSE](LICENSE)
 
 ## 📬 联系方式
 
-- **Email**: [请自行补充]
+- **Email**: 88278016@qq.com
 - **GitHub Issues**: [提交 Issue](https://github.com/d9g/ClawMissionPanel/issues)
-- **微信公众号**: [请自行补充]
+- **微信公众号**: 老杨讲理
 
 ---
 
