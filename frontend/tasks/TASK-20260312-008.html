@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK-20260312-008 - 小云调度 Agent 实施</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .task-id {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .task-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .meta-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .meta-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+        .meta-value {
+            font-size: 16px;
+            color: #374151;
+            font-weight: 600;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-completed { background: #10b981; color: white; }
+        .status-in_progress { background: #f59e0b; color: white; }
+        .status-pending { background: #3b82f6; color: white; }
+        .status-cancelled { background: #6b7280; color: white; }
+        .content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .content h2 { margin-top: 20px; margin-bottom: 10px; color: #333; }
+        .content h3 { margin-top: 15px; margin-bottom: 8px; color: #555; }
+        .content p { margin-bottom: 10px; line-height: 1.6; color: #4b5563; }
+        .content ul, .content ol { margin-left: 20px; margin-bottom: 10px; line-height: 1.8; }
+        .content code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        .content pre { background: #f3f4f6; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/task-board/" class="back-link">← 返回任务板</a>
+        
+        <div class="header">
+            <div class="task-id">TASK-20260312-008</div>
+            <h1 class="task-title">小云调度 Agent 实施</h1>
+            
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">状态</div>
+                    <div class="meta-value">
+                        <span class="status-badge status-🟠 in_progress (整合 task-20260312-001 功能)">🟠 IN_PROGRESS (整合 TASK-20260312-001 功能)</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">优先级</div>
+                    <div class="meta-value">P0</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">执行者</div>
+                    <div class="meta-value">未分配</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">创建时间</div>
+                    <div class="meta-value">2026-03-12 21:10</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">完成时间</div>
+                    <div class="meta-value">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <h2>🆕 新建任务：小云调度 Agent 实施</h2>
+
+<p><strong>**任务 ID**: TASK-20260312-008</strong></p>
+<p><strong>**任务名称**: 小云调度 Agent 实施</strong></p>
+<p><strong>**优先级**: P0</strong></p>
+<p><strong>**状态**: 🟠 IN_PROGRESS (整合 TASK-20260312-001 功能)</strong></p>
+<p><strong>**创建时间**: 2026-03-12 21:10</strong></p>
+<p><strong>**更新时间**: 2026-03-12 22:55</strong></p>
+
+<p>---</p>
+
+<h3>📋 任务目标</h3>
+
+<p>实现小云调度 Agent，作为多 Agent 系统的统一任务分发器。</p>
+
+<p><strong>**整合原 TASK-20260312-001 的功能**:</strong></p>
+<li>✅ 任务状态自动更新</li>
+<li>✅ 延期检测和告警</li>
+<li>✅ Agent 心跳监控</li>
+<li>✅ DoD 质量门禁</li>
+
+<p>---</p>
+
+<h3>🎯 需求说明</h3>
+
+<p>详见设计文档：`docs/DISPATCH-AGENT-DESIGN.md`</p>
+
+<p><strong>**参考**: `docs/MISSION-CONTROL-ANALYSIS.md`</strong></p>
+
+<p>---</p>
+
+<h3>📝 任务拆解</h3>
+
+<p>| 子任务 | 执行者 | 预估 | 状态 |</p>
+<p>|--------|--------|------|------|</p>
+<p>| 1. 架构设计评审 | 小云评委 | 0.5h | ⏳ 等待评审 |</p>
+<p>| 2. 创建 Agent 结构 | 小云开发 | 0.5h | ⬜️ 待开始 |</p>
+<p>| 3. 实现分发逻辑 | 小云开发 | 2h | ⬜️ 待开始 |</p>
+<p>| 4. 实现状态更新机制 | 小云开发 | 1h | ⬜️ 待开始 (原 TASK-20260312-001) |</p>
+<p>| 5. 实现心跳监控 | 小云开发 | 1h | ⬜️ 待开始 |</p>
+<p>| 6. 测试验证 | 小云测试 | 1h | ⬜️ 待开始 |</p>
+<p>| 7. 文档更新 | 小云记录 | 0.5h | ⬜️ 待开始 |</p>
+
+<p>---</p>
+
+<h3>🎯 验收标准</h3>
+
+<li>✅ 小云调度 Agent 正常运行</li>
+<li>✅ 任务自动分发机制正常</li>
+<li>✅ Agent 心跳监控正常</li>
+<li>✅ 状态更新机制正常</li>
+<li>✅ 延期告警机制正常</li>
+<li>✅ DoD 质量门禁集成</li>
+
+<p>---</p>
+
+<h3>📝 变更记录</h3>
+
+<p>### 2026-03-12 22:55</p>
+<li>整合 TASK-20260312-001 (任务状态更新机制改进) 的功能</li>
+<li>TASK-20260312-001 标记为 CANCELLED</li>
+<li>更新任务拆解，增加状态更新和心跳监控子任务</li>
+
+<p>---</p>
+
+<p><strong>**评审通过后开始实施**</strong></p>
+
+<p>---</p>
+
+<p>_等待评审通过后开始开发！_</p>
+
+        </div>
+    </div>
+</body>
+</html>

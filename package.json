@@ -1,0 +1,41 @@
+{
+  "name": "claw-mission-panel",
+  "version": "1.0.0",
+  "description": "🦞 OpenClaw Multi-Agent Mission Control Panel - 多 Agent 任务调度与监控系统",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "dev": "nodemon backend/src/server.js",
+    "build": "echo 'Frontend is static, no build needed'",
+    "test": "echo 'No tests yet'",
+    "init-db": "node backend/scripts/init-database.js",
+    "sync-tasks": "node backend/scripts/sync-all-tasks.js",
+    "generate-html": "node backend/scripts/generate-task-html.js",
+    "deploy": "bash deploy.sh"
+  },
+  "keywords": [
+    "openclaw",
+    "agent",
+    "mission-control",
+    "task-board",
+    "multi-agent",
+    "scheduler"
+  ],
+  "author": "小云团队",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "better-sqlite3": "^9.2.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d9g/ClawMissionPanel.git"
+  }
+}

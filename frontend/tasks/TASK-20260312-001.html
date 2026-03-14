@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK-20260312-001 - 任务状态更新机制改进</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .task-id {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .task-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .meta-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .meta-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+        .meta-value {
+            font-size: 16px;
+            color: #374151;
+            font-weight: 600;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-completed { background: #10b981; color: white; }
+        .status-in_progress { background: #f59e0b; color: white; }
+        .status-pending { background: #3b82f6; color: white; }
+        .status-cancelled { background: #6b7280; color: white; }
+        .content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .content h2 { margin-top: 20px; margin-bottom: 10px; color: #333; }
+        .content h3 { margin-top: 15px; margin-bottom: 8px; color: #555; }
+        .content p { margin-bottom: 10px; line-height: 1.6; color: #4b5563; }
+        .content ul, .content ol { margin-left: 20px; margin-bottom: 10px; line-height: 1.8; }
+        .content code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        .content pre { background: #f3f4f6; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/task-board/" class="back-link">← 返回任务板</a>
+        
+        <div class="header">
+            <div class="task-id">TASK-20260312-001</div>
+            <h1 class="task-title">任务状态更新机制改进</h1>
+            
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">状态</div>
+                    <div class="meta-value">
+                        <span class="status-badge status-cancelled cancelled (功能已整合到 task-20260312-008)">❌ CANCELLED (功能已整合到 TASK-20260312-008)</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">优先级</div>
+                    <div class="meta-value">P0</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">执行者</div>
+                    <div class="meta-value">小云开发 💻、小云测试 ✅</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">创建时间</div>
+                    <div class="meta-value">2026-03-12 06:10</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">完成时间</div>
+                    <div class="meta-value">2026-03-12 22:55</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <h2>任务状态更新问题定位与改进</h2>
+
+<p><strong>**任务 ID**: TASK-20260312-001</strong></p>
+<p><strong>**任务名称**: 任务状态更新机制改进</strong></p>
+<p><strong>**优先级**: P0</strong></p>
+<p><strong>**执行者**: 小云开发 💻、小云测试 ✅</strong></p>
+<p><strong>**状态**: ❌ CANCELLED (功能已整合到 TASK-20260312-008)</strong></p>
+<p><strong>**创建时间**: 2026-03-12 06:10</strong></p>
+<p><strong>**取消时间**: 2026-03-12 22:55</strong></p>
+<p><strong>**取消原因**: Mission Control 设计已完全覆盖本任务功能</strong></p>
+
+<p>---</p>
+
+<h3>📋 问题回顾</h3>
+
+<p>### 事件经过</p>
+
+<p>| 时间 | 事件 |</p>
+<p>|------|------|</p>
+<p>| 2026-03-11 23:02 | TASK-20260311-003 (辩论会流程开发) 启动 |</p>
+<p>| 2026-03-12 03:00 | **预计完成时间** (实际未完成，也未更新状态) |</p>
+<p>| 2026-03-12 04:21 | 用户发现流程阻塞，主动询问 |</p>
+<p>| 2026-03-12 04:30 | 小云手动更新任务状态为 COMPLETED |</p>
+<p>| 2026-03-12 06:10 | 创建本改进任务 |</p>
+
+<p>### 根本原因</p>
+
+<p>1. **缺乏状态更新意识**: 开发完成后忘记更新任务状态</p>
+<p>2. **缺乏自动化机制**: 没有自动更新状态的 API 或工具</p>
+<p>3. **缺乏监控告警**: 任务延期没有自动提醒</p>
+<p>4. **DoD 定义不清**: "完成"的标准不明确</p>
+
+<p>---</p>
+
+<h3>🔧 改进方案</h3>
+
+<p>### 1. 任务状态管理模块</p>
+
+<p><strong>**文件**: `src/task-status-manager.js`</strong></p>
+
+<p><strong>**功能**:</strong></p>
+<li>`updateStatus(taskId, newStatus)` - 更新任务状态</li>
+<li>`checkOverdueTasks()` - 检查延期任务</li>
+<li>`notifyAssignee(taskId)` - 通知执行者更新状态</li>
+<li>`autoComplete(taskId)` - 自动标记完成 (当输出物都存在时)</li>
+
+<p><strong>**集成点**:</strong></p>
+<li>Agent 完成工作后调用 `updateStatus()`</li>
+<li>定时任务每 30 分钟调用 `checkOverdueTasks()`</li>
+
+<p>### 2. DoD 检查清单</p>
+
+<p><strong>**位置**: 每个 Agent 的 `AGENTS.md`</strong></p>
+
+<p><strong>**清单内容**:</strong></p>
+<p>```markdown</p>
+<h3>任务完成检查清单 (DoD)</h3>
+
+<li>[ ] 核心功能已实现</li>
+<li>[ ] 自测通过</li>
+<li>[ ] **任务状态已更新为 COMPLETED** ⚠️ 关键</li>
+<li>[ ] 输出物已提交到指定位置</li>
+<li>[ ] 相关文档已更新</li>
+<li>[ ] 下游任务负责人已通知</li>
+<p>```</p>
+
+<p>### 3. 定时状态同步</p>
+
+<p><strong>**文件**: `scripts/task-sync.js`</strong></p>
+
+<p><strong>**功能**:</strong></p>
+<li>每 30 分钟检查一次所有 IN_PROGRESS 任务</li>
+<li>超过预计时间 1 小时 → 发送提醒</li>
+<li>超过预计时间 4 小时 → 升级告警</li>
+
+<p>### 4. 测试验证</p>
+
+<p><strong>**测试用例**:</strong></p>
+<li>状态更新 API 测试</li>
+<li>延期检测测试</li>
+<li>告警通知测试</li>
+
+<p>---</p>
+
+<h3>📊 任务拆解</h3>
+
+<p>| 子任务 | 执行者 | 预估 | 状态 |</p>
+<p>|--------|--------|------|------|</p>
+<p>| 1. 任务状态管理模块 | 小云开发 | 2h | ⬜️ |</p>
+<p>| 2. DoD 检查清单 | 小云开发 | 0.5h | ⬜️ |</p>
+<p>| 3. 定时状态同步 | 小云开发 | 1.5h | ⬜️ |</p>
+<p>| 4. 测试验证 | 小云测试 | 2h | ⬜️ |</p>
+
+<p>---</p>
+
+<h3>🎯 验收标准</h3>
+
+<li>✅ 状态更新 API 可正常调用</li>
+<li>✅ DoD 清单集成到所有 Agent 的 AGENTS.md</li>
+<li>✅ 定时同步脚本正常运行</li>
+<li>✅ 测试用例全部通过</li>
+
+<p>---</p>
+
+<h3>📝 取消说明</h3>
+
+<p><strong>**取消时间**: 2026-03-12 22:55</strong></p>
+
+<p><strong>**取消原因**:</strong></p>
+<p>1. Mission Control 设计已完全覆盖本任务的所有功能</p>
+<p>2. 小云调度 Agent (TASK-20260312-008) 将统一实现:</p>
+<p>   - 任务状态自动更新</p>
+<p>   - 延期检测和告警</p>
+<p>   - Agent 心跳监控</p>
+<p>   - 任务分发和追踪</p>
+<p>   - DoD 质量门禁</p>
+<p>3. 避免重复开发，整合到统一架构中</p>
+
+<p><strong>**功能迁移**:</strong></p>
+<li>✅ 状态更新机制 → 迁移到小云调度 Agent</li>
+<li>✅ 延期告警 → 迁移到小云调度 Agent</li>
+<li>✅ 监控机制 → 迁移到小云调度 Agent</li>
+<li>✅ DoD 检查清单 → 保留，集成到 Agent 规范</li>
+
+<p><strong>**后续工作**:</strong></p>
+<li>在 TASK-20260312-008 中实现上述功能</li>
+<li>参考 Mission Control 设计文档</li>
+
+<p>---</p>
+
+<p><strong>**创建人**: 小云 ☁️</strong></p>
+<p><strong>**创建时间**: 2026-03-12 06:10</strong></p>
+<p><strong>**取消人**: 小云 ☁️</strong></p>
+<p><strong>**取消时间**: 2026-03-12 22:55</strong></p>
+
+        </div>
+    </div>
+</body>
+</html>

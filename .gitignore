@@ -1,0 +1,52 @@
+# 依赖
+node_modules/
+pnpm-lock.yaml
+
+# 数据库
+database/*.db
+
+# 日志
+logs/
+*.log
+npm-debug.log*
+
+# 环境变量
+.env
+.env.local
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# 敏感信息
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+service-account.json
+
+# OpenClaw 配置
+openclaw.json
+agents/*/inbox/*
+agents/*/sessions/*
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.bak

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK-20260312-006 - 任务板进度展示增强</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .task-id {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .task-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .meta-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .meta-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+        .meta-value {
+            font-size: 16px;
+            color: #374151;
+            font-weight: 600;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-completed { background: #10b981; color: white; }
+        .status-in_progress { background: #f59e0b; color: white; }
+        .status-pending { background: #3b82f6; color: white; }
+        .status-cancelled { background: #6b7280; color: white; }
+        .content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .content h2 { margin-top: 20px; margin-bottom: 10px; color: #333; }
+        .content h3 { margin-top: 15px; margin-bottom: 8px; color: #555; }
+        .content p { margin-bottom: 10px; line-height: 1.6; color: #4b5563; }
+        .content ul, .content ol { margin-left: 20px; margin-bottom: 10px; line-height: 1.8; }
+        .content code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        .content pre { background: #f3f4f6; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/task-board/" class="back-link">← 返回任务板</a>
+        
+        <div class="header">
+            <div class="task-id">TASK-20260312-006</div>
+            <h1 class="task-title">任务板进度展示增强</h1>
+            
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">状态</div>
+                    <div class="meta-value">
+                        <span class="status-badge status-pending">PENDING</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">优先级</div>
+                    <div class="meta-value">P0</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">执行者</div>
+                    <div class="meta-value">小云开发 💻</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">创建时间</div>
+                    <div class="meta-value">2026-03-12 16:05</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">完成时间</div>
+                    <div class="meta-value">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <h2>任务：任务板进度展示增强</h2>
+
+<p><strong>**任务 ID**: TASK-20260312-006</strong></p>
+<p><strong>**任务名称**: 任务板进度展示增强</strong></p>
+<p><strong>**优先级**: P0</strong></p>
+<p><strong>**执行者**: 小云开发 💻</strong></p>
+<p><strong>**创建时间**: 2026-03-12 16:05</strong></p>
+<p><strong>**预计完成**: 2026-03-12 20:00 (4 小时)</strong></p>
+
+<p>---</p>
+
+<h3>📋 任务目标</h3>
+
+<p>在任务公告板首页增加 Agent 工作状态展示，让用户无需询问即可看到所有 Agent 的进度。</p>
+
+<p>---</p>
+
+<h3>🎯 需求说明</h3>
+
+<p>### 用户原话</p>
+<p>"这个信息最好也能在任务公告面板里体现。要不然每次都得我给你发信息，询问，你有时候也挺忙的。"</p>
+
+<p>### 核心需求</p>
+<p>1. 在任务板首页展示所有 Agent 的工作状态</p>
+<p>2. 显示任务进度百分比</p>
+<p>3. 延期任务有明显告警标记</p>
+<p>4. 数据自动刷新 (每 5 分钟)</p>
+
+<p>---</p>
+
+<h3>📋 功能拆解</h3>
+
+<p>### 1. Agent 状态 API ⬜️</p>
+
+<p><strong>**端点**: `GET /api/agents/status`</strong></p>
+
+<p><strong>**功能**:</strong></p>
+<li>查询所有已配置 Agent</li>
+<li>获取每个 Agent 的当前任务</li>
+<li>计算任务进度</li>
+<li>检测是否延期</li>
+
+<p><strong>**响应示例**:</strong></p>
+<p>```json</p>
+<p>{</p>
+<p>  "success": true,</p>
+<p>  "data": [</p>
+<p>    {</p>
+<p>      "id": "xiaoyun-dev",</p>
+<p>      "name": "小云开发",</p>
+<p>      "emoji": "💻",</p>
+<p>      "status": "working",</p>
+<p>      "currentTask": "TASK-20260312-001",</p>
+<p>      "progress": 85,</p>
+<p>      "overdue": false</p>
+<p>    },</p>
+<p>    {</p>
+<p>      "id": "xiaoyun-test",</p>
+<p>      "name": "小云测试",</p>
+<p>      "emoji": "✅",</p>
+<p>      "status": "inactive",</p>
+<p>      "currentTask": "TASK-20260311-004",</p>
+<p>      "progress": 15,</p>
+<p>      "overdue": true,</p>
+<p>      "overdueHours": 9</p>
+<p>    }</p>
+<p>  ]</p>
+<p>}</p>
+<p>```</p>
+
+<p><strong>**预计时间**: 1h</strong></p>
+
+<p>---</p>
+
+<p>### 2. 进度统计 API ⬜️</p>
+
+<p><strong>**端点**: `GET /api/tasks/stats`</strong></p>
+
+<p><strong>**功能**:</strong></p>
+<li>统计任务总数</li>
+<li>统计各状态任务数</li>
+<li>统计延期任务数</li>
+<li>计算完成率</li>
+
+<p><strong>**响应示例**:</strong></p>
+<p>```json</p>
+<p>{</p>
+<p>  "success": true,</p>
+<p>  "data": {</p>
+<p>    "total": 7,</p>
+<p>    "completed": 2,</p>
+<p>    "inProgress": 3,</p>
+<p>    "pending": 2,</p>
+<p>    "overdue": 2,</p>
+<p>    "lastUpdated": "2026-03-12T16:00:00Z"</p>
+<p>  }</p>
+<p>}</p>
+<p>```</p>
+
+<p><strong>**预计时间**: 0.5h</strong></p>
+
+<p>---</p>
+
+<p>### 3. 前端 Agent 状态卡片 ⬜️</p>
+
+<p><strong>**文件**: `public/index.html` (修改)</strong></p>
+
+<p><strong>**功能**:</strong></p>
+<li>Agent 状态卡片展示</li>
+<li>进度条显示</li>
+<li>状态标记 (工作中/待命/未响应)</li>
+<li>延期告警标记</li>
+
+<p><strong>**UI 设计**:</strong></p>
+<p>```html</p>
+<p><div class="agent-dashboard"></p>
+<p>  <h2>📊 团队状态</h2></p>
+<p>  <div class="agent-cards"></p>
+<p>    <div class="agent-card working"></p>
+<p>      <div class="agent-header"></p>
+<p>        <span class="agent-name">小云开发 💻</span></p>
+<p>        <span class="agent-status">🟢 工作中</span></p>
+<p>      </div></p>
+<p>      <div class="task-info"></p>
+<p>        <span class="task-id">TASK-20260312-001</span></p>
+<p>        <div class="progress-bar"></p>
+<p>          <div class="progress" style="width: 85%"></div></p>
+<p>        </div></p>
+<p>        <span class="progress-text">85%</span></p>
+<p>      </div></p>
+<p>    </div></p>
+
+<p>    <div class="agent-card inactive overdue"></p>
+<p>      <div class="agent-header"></p>
+<p>        <span class="agent-name">小云测试 ✅</span></p>
+<p>        <span class="agent-status">🔴 未响应</span></p>
+<p>      </div></p>
+<p>      <div class="task-info"></p>
+<p>        <span class="task-id">TASK-20260311-004</span></p>
+<p>        <div class="progress-bar"></p>
+<p>          <div class="progress" style="width: 15%"></div></p>
+<p>        </div></p>
+<p>        <span class="progress-text">15%</span></p>
+<p>        <span class="overdue-badge">⚠️ 延期 9h</span></p>
+<p>      </div></p>
+<p>    </div></p>
+<p>  </div></p>
+<p></div></p>
+<p>```</p>
+
+<p><strong>**预计时间**: 1.5h</strong></p>
+
+<p>---</p>
+
+<p>### 4. 延期任务告警区 ⬜️</p>
+
+<p><strong>**文件**: `public/index.html` (修改)</strong></p>
+
+<p><strong>**功能**:</strong></p>
+<li>列出所有延期任务</li>
+<li>显示延期时长</li>
+<li>红色告警标记</li>
+
+<p><strong>**UI 设计**:</strong></p>
+<p>```html</p>
+<p><div class="overdue-alerts"></p>
+<p>  <h3>⚠️ 延期任务 (2 个)</h3></p>
+<p>  <div class="overdue-item"></p>
+<p>    <span class="task-id">TASK-20260311-004</span></p>
+<p>    <span class="assignee">小云测试 ✅</span></p>
+<p>    <span class="overdue-time">延期 9 小时</span></p>
+<p>  </div></p>
+<p>  <div class="overdue-item"></p>
+<p>    <span class="task-id">TASK-20260311-005</span></p>
+<p>    <span class="assignee">小云记录 📝</span></p>
+<p>    <span class="overdue-time">延期 15 小时</span></p>
+<p>  </div></p>
+<p></div></p>
+<p>```</p>
+
+<p><strong>**预计时间**: 0.5h</strong></p>
+
+<p>---</p>
+
+<p>### 5. 自动刷新功能 ⬜️</p>
+
+<p><strong>**文件**: `public/js/dashboard.js` (新建)</strong></p>
+
+<p><strong>**功能**:</strong></p>
+<li>每 5 分钟自动刷新数据</li>
+<li>显示最后更新时间</li>
+<li>错误处理</li>
+
+<p><strong>**代码示例**:</strong></p>
+<p>```javascript</p>
+<p>// 每 5 分钟刷新一次</p>
+<p>setInterval(() => {</p>
+<p>  fetch('/api/agents/status')</p>
+<p>    .then(r => r.json())</p>
+<p>    .then(data => updateAgentCards(data))</p>
+<p>    .catch(err => console.error('刷新失败:', err));</p>
+<p>}, 300000);</p>
+
+<p>// 显示最后更新时间</p>
+<p>function updateLastUpdated() {</p>
+<p>  const now = new Date();</p>
+<p>  document.getElementById('last-updated').textContent = </p>
+<p>    `最后更新：${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;</p>
+<p>}</p>
+<p>```</p>
+
+<p><strong>**预计时间**: 0.5h</strong></p>
+
+<p>---</p>
+
+<h3>📊 进度跟踪</h3>
+
+<p>| 子任务 | 状态 | 开始时间 | 完成时间 | 实际耗时 |</p>
+<p>|--------|------|----------|----------|----------|</p>
+<p>| 1. Agent 状态 API | ⬜️ 待开始 | - | - | - |</p>
+<p>| 2. 进度统计 API | ⬜️ 待开始 | - | - | - |</p>
+<p>| 3. 前端 Agent 卡片 | ⬜️ 待开始 | - | - | - |</p>
+<p>| 4. 延期告警区 | ⬜️ 待开始 | - | - | - |</p>
+<p>| 5. 自动刷新功能 | ⬜️ 待开始 | - | - | - |</p>
+
+<p><strong>**总体进度**: 4/5 (80%) ✅</strong></p>
+
+<p>| 子任务 | 状态 | 完成时间 |</p>
+<p>|--------|------|----------|</p>
+<p>| 1. Agent 状态 API | ✅ 完成 | 16:08 |</p>
+<p>| 2. 进度统计 API | ✅ 完成 | 16:08 |</p>
+<p>| 3. 前端 Agent 卡片 | ✅ 完成 | 16:08 |</p>
+<p>| 4. 延期告警区 | ✅ 完成 | 16:08 |</p>
+<p>| 5. 自动刷新功能 | ✅ 完成 | 16:08 |</p>
+
+<p>---</p>
+
+<h3>🎯 验收标准</h3>
+
+<li>[ ] 打开任务板首页就能看到 Agent 状态卡片</li>
+<li>[ ] 状态标记准确 (工作中/待命/未响应)</li>
+<li>[ ] 进度条显示正确百分比</li>
+<li>[ ] 延期任务有红色告警标记</li>
+<li>[ ] 数据每 5 分钟自动刷新</li>
+<li>[ ] 显示最后更新时间</li>
+<li>[ ] 响应式设计 (移动端适配)</li>
+
+<p>---</p>
+
+<h3>📁 输出物</h3>
+
+<li>[x] `src/agent-status.js` - Agent 状态 API ✅</li>
+<li>[x] `src/task-stats.js` - 进度统计 API ✅</li>
+<li>[x] `public/index.html` - 修改 (增加 Agent 状态卡片) ✅</li>
+<li>[x] `public/css/dashboard.css` - 样式 ✅</li>
+<li>[x] `public/js/dashboard.js` - 自动刷新脚本 ✅</li>
+<li>[x] `requirements/REQ-20260312-002.md` - 需求文档 ✅</li>
+<li>[x] `requirements/README.md` - 需求目录说明 ✅</li>
+<li>[x] `public/requirements/index.html` - 需求公告板 ✅</li>
+
+<p>---</p>
+
+<h3>🔗 相关文档</h3>
+
+<li>需求文档：`task-board/docs/progress-display-req.md`</li>
+<li>API 设计：`task-board/docs/api-task-status.md`</li>
+<li>开发规范：`docs/OPENCLAW-DEV-SPEC.md`</li>
+
+<p>---</p>
+
+<p><strong>**创建人**: 小云 ☁️</strong></p>
+<p><strong>**创建时间**: 2026-03-12 16:05</strong></p>
+
+<p>---</p>
+
+<p>_让每次进度都透明，让每次询问都不需要。_</p>
+
+        </div>
+    </div>
+</body>
+</html>

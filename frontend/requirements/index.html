@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 需求任务公告板</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header h1 { color: #667eea; margin-bottom: 10px; }
+        .nav { margin-top: 15px; }
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin-right: 15px;
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        .nav a:hover { background: #e5e7eb; }
+        .content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .req-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .req-card.completed { border-left: 4px solid #10b981; }
+        .req-card h3 { color: #667eea; margin-bottom: 10px; }
+        .req-meta { color: #6b7280; font-size: 14px; margin-bottom: 10px; }
+        .req-desc { background: #f9fafb; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .req-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-completed { background: #d1fae5; color: #065f46; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 需求任务公告板</h1>
+            <p>查看所有需求的提出、评审、实施和完成情况</p>
+            <div class="nav">
+                <a href="/">🏠 任务板首页</a>
+            </div>
+        </div>
+        <div class="content">
+            <h2>✅ 已完成需求</h2>
+            <div class="req-card completed">
+                <h3>REQ-20260312-002: 任务公告板增加 Agent 进度展示</h3>
+                <div class="req-meta">
+                    <span>提出时间：2026-03-12 16:03</span> | 
+                    <span>完成时间：2026-03-12 16:10</span> | 
+                    <span>优先级：P0</span> | 
+                    <span>执行者：小云开发 💻</span>
+                </div>
+                <div class="req-status status-completed">✅ 已完成</div>
+                <div class="req-desc">
+                    <strong>用户原话</strong>:
+                    <blockquote style="margin: 10px 0; padding: 10px; background: white; border-left: 3px solid #667eea;">
+                        "这个信息最好也能在任务公告面板里体现。要不然每次都得我给你发信息，询问，你有时候也挺忙的。"
+                    </blockquote>
+                </div>
+                <p><strong>实施内容</strong>:</p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>✅ Agent 状态卡片展示</li>
+                    <li>✅ 进度条显示</li>
+                    <li>✅ 延期任务告警</li>
+                    <li>✅ 自动刷新 (每 5 分钟)</li>
+                </ul>
+                <p><strong>访问地址</strong>: <a href="/">http://localhost:3000/</a></p>
+                <p><strong>需求文档</strong>: <a href="/requirements/REQ-20260312-002.md">REQ-20260312-002.md</a></p>
+            </div>
+            
+            <h2 style="margin-top: 30px;">📋 需求提交流程</h2>
+            <ol style="margin: 15px 0 15px 20px; line-height: 2;">
+                <li><strong>提交需求</strong> - 直接告诉小云或创建需求文档</li>
+                <li><strong>需求评审</strong> - 小云评委评审可行性和优先级</li>
+                <li><strong>任务分配</strong> - 创建开发任务并分配执行者</li>
+                <li><strong>开发实施</strong> - 按需求文档实施</li>
+                <li><strong>验收上线</strong> - 验收通过后上线</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
