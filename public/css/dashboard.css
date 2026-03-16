@@ -1,0 +1,287 @@
+/* 任务板首页 - Agent 状态卡片样式 */
+
+.agent-dashboard {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.agent-dashboard h2 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.agent-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.agent-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 16px;
+  color: #333;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.agent-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.agent-card.working {
+  border-left: 4px solid #10b981;
+}
+
+.agent-card.inactive {
+  border-left: 4px solid #ef4444;
+}
+
+.agent-card.idle {
+  border-left: 4px solid #f59e0b;
+}
+
+.agent-card.pending {
+  border-left: 4px solid #3b82f6;
+}
+
+.agent-card.error {
+  border-left: 4px solid #374151;
+}
+
+.agent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.agent-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.agent-status {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #e5e7eb;
+}
+
+.agent-card.working .agent-status {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.agent-card.inactive .agent-status {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.agent-card.idle .agent-status {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.task-info {
+  margin-top: 12px;
+}
+
+.task-id {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.progress-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.time-estimate {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: 4px;
+}
+
+.time-estimate.overdue {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.estimated-complete {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 4px;
+  text-align: right;
+}
+
+.overdue-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 6px;
+  background: #ef4444;
+  color: white;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* 延期任务告警区 */
+.overdue-alerts {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.overdue-alerts h3 {
+  margin: 0 0 12px 0;
+  color: #991b1b;
+  font-size: 16px;
+}
+
+.overdue-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #fecaca;
+}
+
+.overdue-item:last-child {
+  border-bottom: none;
+}
+
+.overdue-item .task-id {
+  font-weight: 500;
+}
+
+.overdue-item .assignee {
+  color: #374151;
+}
+
+.overdue-item .overdue-time {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* 统计卡片 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #374151;
+  text-transform: uppercase;
+}
+
+.stat-card.completed .stat-value { color: #10b981; }
+.stat-card.in-progress .stat-value { color: #3b82f6; }
+.stat-card.pending .stat-value { color: #f59e0b; }
+.stat-card.overdue .stat-value { color: #ef4444; }
+
+/* 最后更新时间 */
+.last-updated {
+  text-align: right;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.refresh-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+.refresh-btn:hover {
+  transform: scale(1.05);
+}
+
+.refresh-btn:active {
+  transform: scale(0.95);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .agent-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 任务 ID 链接样式 */
+.task-id-link {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.task-id-link:hover {
+  color: #667eea;
+  text-decoration: underline;
+}

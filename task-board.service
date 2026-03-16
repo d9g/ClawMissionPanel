@@ -1,0 +1,25 @@
+[Unit]
+Description=小云任务管理系统
+After=network.target
+
+[Service]
+Type=simple
+User=admin
+WorkingDirectory=/home/admin/.openclaw/workspace/task-board
+ExecStart=/usr/bin/node src/server.js
+Restart=on-failure
+RestartSec=10
+StartLimitBurst=5
+StartLimitInterval=300
+Environment=NODE_ENV=production
+Environment=TASK_BOARD_PORT=3000
+
+# 日志
+StandardOutput=append:/home/admin/.openclaw/workspace/task-board/logs/server.log
+StandardError=append:/home/admin/.openclaw/workspace/task-board/logs/error.log
+
+# 确保端口释放后再启动
+ExecStopPost=/bin/sleep 2
+
+[Install]
+WantedBy=multi-user.target

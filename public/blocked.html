@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 需求任务公告板 - 阻塞任务</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header h1 { color: #667eea; margin-bottom: 10px; }
+        
+        .blocked-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid #ff4757;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4757;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .task-list { list-style: none; }
+        .task-item {
+            background: #fff5f5;
+            border-left: 4px solid #ff4757;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-title { font-weight: bold; font-size: 16px; color: #333; }
+        .task-id { 
+            background: #667eea; 
+            color: white; 
+            padding: 4px 12px; 
+            border-radius: 12px; 
+            font-size: 12px;
+        }
+        .task-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .meta-item { color: #666; }
+        .meta-label { font-weight: bold; color: #999; }
+        .blocked-reason {
+            background: #ff4757;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .priority-P0 { background: #ff4757; color: white; }
+        .priority-P1 { background: #ffa502; color: white; }
+        .priority-P2 { background: #2ed573; color: white; }
+        
+        .task-title-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            flex: 1;
+        }
+        .task-title-link:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+        .empty-state h2 { font-size: 32px; margin-bottom: 10px; }
+        .empty-state p { font-size: 16px; opacity: 0.9; }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        .refresh-btn:hover { background: #5568d3; }
+        
+        .loading { text-align: center; padding: 40px; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 阻塞任务监控</h1>
+            <p>自动检测并展示所有阻塞的任务</p>
+            <div style="margin-top: 15px;">
+                <span id="last-update">最后更新：--</span>
+                <button class="refresh-btn" onclick="loadBlockedTasks()">🔄 刷新</button>
+                <a href="/task-board/" class="refresh-btn" style="text-decoration: none; display: inline-block; margin-left: 10px;">📋 返回总览</a>
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">加载中...</div>
+        
+        <div id="content" style="display: none;">
+            <div class="blocked-section">
+                <div class="section-title">
+                    🔴 阻塞任务
+                    <span id="blocked-count" style="background: #ff4757; color: white; padding: 4px 12px; border-radius: 12px; font-size: 14px;">0</span>
+                </div>
+                <ul class="task-list" id="blocked-list"></ul>
+            </div>
+            
+            <div class="blocked-section" style="border-color: #ffa502;">
+                <div class="section-title" style="color: #ffa502;">
+                    🟡 进行中任务
+                </div>
+                <ul class="task-list" id="progress-list"></ul>
+            </div>
+            
+            <div class="blocked-section" style="border-color: #2ed573;">
+                <div class="section-title" style="color: #2ed573;">
+                    🟢 等待中任务
+                </div>
+                <ul class="task-list" id="pending-list"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_ALL = '/task-board-api/tasks';
+        
+        async function loadBlockedTasks() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('content').style.display = 'none';
+            
+            try {
+                const response = await fetch(API_ALL);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    const blocked = result.data.filter(t => t.status === 'BLOCKED');
+                    console.log('[Blocked] 阻塞任务:', blocked.length);
+                    renderTasks(blocked);
+                }
+            } catch (error) {
+                console.error('加载失败:', error);
+            }
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('last-update').textContent = '最后更新：' + new Date().toLocaleString('zh-CN');
+        }
+        
+        function renderTasks(data) {
+            // 阻塞任务
+            const blockedList = document.getElementById('blocked-list');
+            const blockedCount = data.blocked || [];
+            document.getElementById('blocked-count').textContent = blockedCount.length;
+            
+            if (blockedCount.length === 0) {
+                blockedList.innerHTML = '<li class="empty-state"><h2>✅ 无阻塞任务</h2><p>所有任务都在正常进行中！</p></li>';
+            } else {
+                blockedList.innerHTML = blockedCount.map(task => `
+                    <li class="task-item">
+                        <div class="task-header">
+                            <a href="/task-board/tasks/${task.task_id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
+                            <span class="task-id">${task.task_id}</span>
+                        </div>
+                        <div class="task-meta">
+                            <div class="meta-item"><span class="meta-label">执行者:</span> ${task.assignee || '未分配'}</div>
+                            <div class="meta-item"><span class="meta-label">优先级:</span> <span class="priority priority-${task.priority}">${task.priority}</span></div>
+                            <div class="meta-item"><span class="meta-label">阻塞时间:</span> ${task.blocked_at || '-'}</div>
+                            <div class="meta-item"><span class="meta-label">未更新:</span> ${task.hours_since_update || 0}小时</div>
+                        </div>
+                        <div class="blocked-reason">🔒 ${escapeHtml(task.blocked_reason || '未知原因')}</div>
+                    </li>
+                `).join('');
+            }
+            
+            // 进行中任务
+            const progressList = document.getElementById('progress-list');
+            const inProgress = data.inProgress || [];
+            progressList.innerHTML = inProgress.map(task => `
+                <li class="task-item" style="border-left-color: #ffa502; background: #fffdf5;">
+                    <div class="task-header">
+                        <a href="/task-board/tasks/${task.task_id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
+                        <span class="task-id">${task.task_id}</span>
+                    </div>
+                    <div class="task-meta">
+                        <div class="meta-item"><span class="meta-label">执行者:</span> ${task.assignee || '未分配'}</div>
+                        <div class="meta-item"><span class="meta-label">优先级:</span> <span class="priority priority-${task.priority}">${task.priority}</span></div>
+                        <div class="meta-item"><span class="meta-label">未更新:</span> ${task.hours_since_update || 0}小时</div>
+                    </div>
+                </li>
+            `).join('') || '<li class="empty-state">暂无进行中任务</li>';
+            
+            // 等待中任务
+            const pendingList = document.getElementById('pending-list');
+            const pending = data.pending || [];
+            pendingList.innerHTML = pending.map(task => `
+                <li class="task-item" style="border-left-color: #2ed573; background: #f5fff9;">
+                    <div class="task-header">
+                        <a href="/task-board/tasks/${task.task_id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
+                        <span class="task-id">${task.task_id}</span>
+                    </div>
+                    <div class="task-meta">
+                        <div class="meta-item"><span class="meta-label">执行者:</span> ${task.assignee || '未分配'}</div>
+                        <div class="meta-item"><span class="meta-label">优先级:</span> <span class="priority priority-${task.priority}">${task.priority}</span></div>
+                    </div>
+                </li>
+            `).join('') || '<li class="empty-state">暂无等待中任务</li>';
+        }
+        
+        function updateStats(stats) {
+            // 可以在这里更新统计信息
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[m]);
+        }
+        
+        // 页面加载时获取数据
+        loadBlockedTasks();
+        
+        // 每 60 秒自动刷新
+        setInterval(loadBlockedTasks, 60000);
+    </script>
+</body>
+</html>

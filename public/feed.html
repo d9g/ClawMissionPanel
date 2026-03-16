@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>📰 活动日志 Feed - OpenMOSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .controls {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .controls label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .controls select,
+        .controls input {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .controls select:focus,
+        .controls input:focus {
+            border-color: #667eea;
+        }
+        
+        .controls button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .controls button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .feed-container {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .feed-header h2 {
+            color: #333;
+        }
+        
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #ccc;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+        
+        .feed-list {
+            list-style: none;
+        }
+        
+        .feed-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .feed-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feed-item.action-claim {
+            border-left-color: #28a745;
+        }
+        
+        .feed-item.action-complete {
+            border-left-color: #28a745;
+        }
+        
+        .feed-item.action-review {
+            border-left-color: #17a2b8;
+        }
+        
+        .feed-item.action-release {
+            border-left-color: #dc3545;
+        }
+        
+        .feed-item.action-timeout_release {
+            border-left-color: #dc3545;
+        }
+        
+        .feed-item.action-create_alert {
+            border-left-color: #fd7e14;
+        }
+        
+        .feed-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .agent-name {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 15px;
+        }
+        
+        .action-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .action-claim { background: #28a745; color: white; }
+        .action-complete { background: #28a745; color: white; }
+        .action-review { background: #17a2b8; color: white; }
+        .action-release { background: #dc3545; color: white; }
+        .action-timeout_release { background: #dc3545; color: white; }
+        .action-create_alert { background: #fd7e14; color: white; }
+        .action-submit_review { background: #6610f2; color: white; }
+        
+        .feed-content {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .feed-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .feed-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .refresh-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 活动日志 Feed</h1>
+            <p>实时查看所有 Agent 的活动记录</p>
+        </div>
+        
+        <div class="controls">
+            <label>🔍 筛选:</label>
+            <select id="agent-filter">
+                <option value="">所有 Agent</option>
+                <option value="xiaoyun-dev">小云开发</option>
+                <option value="xiaoyun-test">小云测试</option>
+                <option value="xiaoyun-recorder">小云记录</option>
+                <option value="xiaoyun-judge">小云评委</option>
+                <option value="xiaoyun-dispatch">小云调度</option>
+                <option value="xiaoyun-novel">小云推书</option>
+            </select>
+            
+            <select id="action-filter">
+                <option value="">所有操作</option>
+                <option value="claim">认领任务</option>
+                <option value="complete">完成任务</option>
+                <option value="review">评审</option>
+                <option value="release">释放</option>
+                <option value="timeout_release">超时释放</option>
+                <option value="create_alert">创建告警</option>
+            </select>
+            
+            <label>📊 数量:</label>
+            <select id="limit-filter">
+                <option value="50">50 条</option>
+                <option value="100">100 条</option>
+                <option value="200">200 条</option>
+                <option value="500">500 条</option>
+            </select>
+            
+            <button onclick="loadFeed()">🔄 刷新</button>
+            
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                <span>⚡ 自动刷新</span>
+                <div class="toggle-switch active" onclick="toggleAutoRefresh()"></div>
+            </div>
+        </div>
+        
+        <div class="feed-container">
+            <div class="feed-header">
+                <h2>📋 活动记录</h2>
+                <div class="auto-refresh">
+                    <span id="refresh-status">🟢 已启用</span>
+                </div>
+            </div>
+            
+            <div id="feed-list-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>正在加载活动日志...</p>
+                </div>
+            </div>
+            
+            <div class="refresh-time">
+                最后更新：<span id="last-update">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 配置
+        const CONFIG = {
+            apiUrl: '/task-board-data.json', // 使用 JSON 文件作为数据源
+            refreshInterval: 30000, // 30 秒
+            autoRefresh: true
+        };
+        
+        let autoRefreshTimer = null;
+        
+        // 加载活动日志
+        async function loadFeed() {
+            const container = document.getElementById('feed-list-container');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>正在加载活动日志...</p>
+                </div>
+            `;
+            
+            try {
+                // 从 data.json 读取活动日志
+                const response = await fetch(CONFIG.apiUrl + '?t=' + Date.now());
+                const data = await response.json();
+                
+                const logs = data.activity_logs || [];
+                const agentFilter = document.getElementById('agent-filter').value;
+                const actionFilter = document.getElementById('action-filter').value;
+                const limit = parseInt(document.getElementById('limit-filter').value);
+                
+                // 筛选
+                let filteredLogs = logs;
+                if (agentFilter) {
+                    filteredLogs = logs.filter(log => log.agent_id === agentFilter);
+                }
+                if (actionFilter) {
+                    filteredLogs = logs.filter(log => log.action === actionFilter);
+                }
+                
+                // 限制数量
+                filteredLogs = filteredLogs.slice(0, limit);
+                
+                renderFeed(filteredLogs);
+                updateLastUpdate();
+                
+            } catch (error) {
+                console.error('加载失败:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>❌ 加载失败</h3>
+                        <p>请确保数据文件存在且可访问</p>
+                        <button onclick="loadFeed()" style="margin-top:15px;padding:10px 20px;background:#667eea;color:white;border:none;border-radius:8px;cursor:pointer;">重试</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // 渲染 Feed
+        function renderFeed(logs) {
+            const container = document.getElementById('feed-list-container');
+            
+            if (logs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>📭 暂无活动记录</h3>
+                        <p>Agent 活动将显示在这里</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const html = `
+                <ul class="feed-list">
+                    ${logs.map(log => `
+                        <li class="feed-item action-${log.action}">
+                            <div class="feed-header-row">
+                                <span class="agent-name">🤖 ${getAgentName(log.agent_id)}</span>
+                                <span class="action-badge action-${log.action}">${getActionName(log.action)}</span>
+                            </div>
+                            <div class="feed-content">
+                                ${log.details ? formatDetails(log.details) : '无详细信息'}
+                                ${log.task_id ? `<br><strong>📋 任务:</strong> ${log.task_id}` : ''}
+                            </div>
+                            <div class="feed-meta">
+                                <span>🕐 ${formatTime(log.created_at)}</span>
+                                <span>🆔 ${log.id || '-'}</span>
+                            </div>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // 获取 Agent 名称
+        function getAgentName(agentId) {
+            const names = {
+                'xiaoyun-dev': '小云开发',
+                'xiaoyun-test': '小云测试',
+                'xiaoyun-recorder': '小云记录',
+                'xiaoyun-judge': '小云评委',
+                'xiaoyun-dispatch': '小云调度',
+                'xiaoyun-novel': '小云推书',
+                'patrol': '巡逻监控',
+                'system': '系统'
+            };
+            return names[agentId] || agentId;
+        }
+        
+        // 获取操作名称
+        function getActionName(action) {
+            const names = {
+                'claim': '📥 认领',
+                'complete': '✅ 完成',
+                'review': '🔍 评审',
+                'release': '🔓 释放',
+                'timeout_release': '⏰ 超时释放',
+                'create_alert': '🚨 创建告警',
+                'submit_review': '📤 提交评审',
+                'update_progress': '📊 更新进度'
+            };
+            return names[action] || action;
+        }
+        
+        // 格式化详细信息
+        function formatDetails(detailsStr) {
+            try {
+                const details = typeof detailsStr === 'string' ? JSON.parse(detailsStr) : detailsStr;
+                return Object.entries(details)
+                    .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
+                    .join(' | ');
+            } catch {
+                return detailsStr || '';
+            }
+        }
+        
+        // 格式化时间
+        function formatTime(timeStr) {
+            if (!timeStr) return '-';
+            const date = new Date(timeStr.replace(' ', 'T'));
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            
+            if (diff < 60) return `${diff}秒前`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}分钟前`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}小时前`;
+            return date.toLocaleString('zh-CN');
+        }
+        
+        // 更新最后更新时间
+        function updateLastUpdate() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = now.toLocaleString('zh-CN');
+        }
+        
+        // 切换自动刷新
+        function toggleAutoRefresh() {
+            const toggle = document.querySelector('.toggle-switch');
+            const status = document.getElementById('refresh-status');
+            
+            CONFIG.autoRefresh = !CONFIG.autoRefresh;
+            
+            if (CONFIG.autoRefresh) {
+                toggle.classList.add('active');
+                status.textContent = '🟢 已启用';
+                startAutoRefresh();
+            } else {
+                toggle.classList.remove('active');
+                status.textContent = '🔴 已禁用';
+                stopAutoRefresh();
+            }
+        }
+        
+        // 启动自动刷新
+        function startAutoRefresh() {
+            if (autoRefreshTimer) return;
+            
+            autoRefreshTimer = setInterval(() => {
+                if (CONFIG.autoRefresh) {
+                    loadFeed();
+                }
+            }, CONFIG.refreshInterval);
+        }
+        
+        // 停止自动刷新
+        function stopAutoRefresh() {
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+                autoRefreshTimer = null;
+            }
+        }
+        
+        // 监听筛选器变化
+        document.getElementById('agent-filter').addEventListener('change', loadFeed);
+        document.getElementById('action-filter').addEventListener('change', loadFeed);
+        document.getElementById('limit-filter').addEventListener('change', loadFeed);
+        
+        // 初始加载
+        loadFeed();
+        startAutoRefresh();
+    </script>
+</body>
+</html>

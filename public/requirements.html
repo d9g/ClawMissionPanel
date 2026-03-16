@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenMOSS 风格多 Agent 监控系统 - 完整需求文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h2 {
+            color: #333;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        h3 {
+            color: #555;
+            margin: 20px 0 10px;
+        }
+        
+        h4 {
+            color: #666;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin: 10px 0;
+        }
+        
+        strong {
+            color: #667eea;
+        }
+        
+        em {
+            color: #666;
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #666;
+            background: #f9f9f9;
+            padding: 10px 15px;
+        }
+        
+        hr {
+            border: none;
+            border-top: 2px solid #eee;
+            margin: 30px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        td {
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.95em;
+        }
+        
+        tr:nth-child(even) {
+            background: linear-gradient(to right, #f9f9f9, #fafafa);
+        }
+        
+        tr:nth-child(odd) {
+            background: white;
+        }
+        
+        tr:hover {
+            background: linear-gradient(to right, #f0f4ff, #f5f0ff);
+            transform: scale(1.001);
+            transition: all 0.2s ease;
+        }
+        
+        /* 状态列样式 */
+        td:contains("✅"), td:contains("完成") {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        td:contains("🟠"), td:contains("进行中") {
+            color: #fd7e14;
+            font-weight: 600;
+        }
+        
+        td:contains("⏳"), td:contains("待") {
+            color: #6c757d;
+            font-weight: 600;
+        }
+        
+        /* 优先级样式 */
+        td:contains("P0") {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        
+        td:contains("P1") {
+            color: #fd7e14;
+            font-weight: 600;
+        }
+        
+        td:contains("P2") {
+            color: #28a745;
+        }
+        
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 5px 0;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            border-bottom: none;
+            font-size: 2em;
+        }
+        
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .toc {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 OpenMOSS 风格多 Agent 监控系统</h1>
+            <p class="meta">完整需求文档 | v1.0 | 2026-03-15 20:41</p>
+        </div>
+        
+        <div class="toc">
+            <h2>📋 目录</h2>
+            <ul>
+                <li><a href="#section-1">1. 项目概述</a></li>
+                <li><a href="#section-2">2. 需求背景</a></li>
+                <li><a href="#section-3">3. 系统架构</a></li>
+                <li><a href="#section-4">4. 核心功能</a></li>
+                <li><a href="#section-5">5. 技术实现</a></li>
+                <li><a href="#section-6">6. 实施计划</a></li>
+                <li><a href="#section-7">7. 验收标准</a></li>
+                <li><a href="#section-8">8. 风险评估</a></li>
+            </ul>
+        </div>
+        
+        <h1>OpenMOSS 风格多 Agent 监控系统 - 完整需求文档</h1>
+
+<strong>文档版本</strong>: v1.0  
+<strong>创建时间</strong>: 2026-03-15 20:30  
+<strong>最后更新</strong>: 2026-03-15 20:30  
+<strong>参考项目</strong>: https://github.com/d9g/OpenMOSS  
+<strong>状态</strong>: 🟠 待评审
+
+<hr>
+
+<h2>📋 目录</h2>
+
+<li><a href="#项目概述">项目概述</a></li>
+<li><a href="#需求背景">需求背景</a></li>
+<li><a href="#系统架构">系统架构</a></li>
+<li><a href="#核心功能">核心功能</a></li>
+<li><a href="#技术实现">技术实现</a></li>
+<li><a href="#实施计划">实施计划</a></li>
+<li><a href="#验收标准">验收标准</a></li>
+<li><a href="#风险评估">风险评估</a></li>
+
+<hr>
+
+<h2>项目概述</h2>
+
+<h3>项目名称</h3>
+
+<strong>OpenMOSS-CN</strong> - 多 Agent 监控与协作系统 (基于 OpenClaw)
+
+<h3>项目目标</h3>
+
+打造一个类似 OpenMOSS 的多 Agent 监控与协作系统，实现：
+<li><strong>自主任务认领</strong> - Agent 唤醒时自主 claim 任务</li>
+<li><strong>完整任务生命周期</strong> - 从创建到完成的全流程管理</li>
+<li><strong>实时监控面板</strong> - 实时展示 Agent 状态和任务进度</li>
+<li><strong>活动日志追踪</strong> - 所有操作可追溯</li>
+<li><strong>数据持久化</strong> - 所有数据存储在数据库，方便展示和查询</li>
+
+<h3>核心价值</h3>
+
+| 价值点 | 说明 |
+|--------|------|
+| <strong>减少人工干预</strong> | Agent 自主认领任务，无需手动分配 |
+| <strong>提高协作效率</strong> | 多 Agent 并行工作，自主协调 |
+| <strong>质量保障</strong> | 评审 + 打分 + 返工闭环 |
+| <strong>可追溯性</strong> | 完整活动日志，问题可追溯 |
+| <strong>数据驱动</strong> | 数据库存储，支持分析和展示 |
+
+<hr>
+
+<h2>需求背景</h2>
+
+<h3>当前痛点</h3>
+
+<li><strong>任务分配繁琐</strong> - 需要手动指定执行者</li>
+<li><strong>进度不透明</strong> - 无法实时查看 Agent 工作状态</li>
+<li><strong>缺少闭环</strong> - 评审流程不完整，无打分机制</li>
+<li><strong>数据分散</strong> - 任务数据在文件中，难以统计展示</li>
+<li><strong>无法追溯</strong> - 没有活动日志，问题难排查</li>
+
+<h3>OpenMOSS 启发</h3>
+
+OpenMOSS 项目 (https://github.com/d9g/OpenMOSS) 提供了完整的解决方案：
+
+<strong>核心特性</strong>:
+<li>✅ 自主任务认领机制</li>
+<li>✅ 完整任务状态机</li>
+<li>✅ 评审打分闭环</li>
+<li>✅ 巡逻监控 Agent</li>
+<li>✅ 活动日志 Feed</li>
+<li>✅ SQLite 数据库存储</li>
+<li>✅ FastAPI 后端</li>
+<li>✅ Vue 3 前端</li>
+
+<strong>可借鉴点</strong>:
+<li>数据库锁机制防止并发冲突</li>
+<li>任务状态机管理生命周期</li>
+<li>活动日志记录所有操作</li>
+<li>RESTful API 提供数据接口</li>
+
+<h3>我们的优势</h3>
+
+<li><strong>已有基础</strong> - 任务板系统已运行</li>
+<li><strong>更多 Agent</strong> - 6 个角色 vs OpenMOSS 4 个</li>
+<li><strong>OpenClaw 技能</strong> - 可插拔技能系统</li>
+<li><strong>简洁架构</strong> - 易于理解和维护</li>
+
+<hr>
+
+<h2>系统架构</h2>
+
+<h3>整体架构</h3>
+
+<pre><code class="language-">┌─────────────────────────────────────────────────────────┐
+│                    用户/管理员                            │
+│                  (设置目标，查看结果)                       │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│                   监控面板 (WebUI)                        │
+│  - 实时任务状态  - Agent 状态  - 活动日志  - 统计数据      │
+│  - 技术栈：原生 JS + CSS (保持现状，逐步迁移 Vue 3)         │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│                  FastAPI 后端 (:6565)                     │
+│  - 任务管理 API  - Agent 管理  - 活动日志  - 数据统计      │
+│  - 数据库事务锁 - 并发控制 - 认证授权 (后续)               │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│               SQLite 数据库 (task-board.db)               │
+│  - tasks 表       - agents 表     - activity_logs 表     │
+│  - reviews 表 (后续) - scores 表 (后续)                   │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│              OpenClaw Agents (6 个角色)                    │
+│  - xiaoyun-dev (Executor)      - xiaoyun-test (Reviewer)│
+│  - xiaoyun-recorder (Recorder) - xiaoyun-judge (Judge)  │
+│  - xiaoyun-dispatch (Planner)  - xiaoyun-novel (Novel)  │
+│                                                         │
+│  唤醒流程：                                              │
+│  1. 定时唤醒 (cron) → 2. 调用 API 查看任务 → 3. 自主认领  │
+│  4. 执行任务 → 5. 提交交付物 → 6. 更新状态               │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h3>数据流</h3>
+
+<pre><code class="language-">用户创建任务
+    ↓
+任务进入数据库 (status=AVAILABLE)
+    ↓
+Agent 定时唤醒 (cron)
+    ↓
+调用 GET /api/tasks/available
+    ↓
+选择适合的任务
+    ↓
+调用 POST /api/tasks/{id}/claim
+    ↓
+数据库事务锁保证原子性
+    ↓
+认领成功 → 执行任务
+    ↓
+调用 PUT /api/tasks/{id}/progress (更新进度)
+    ↓
+调用 POST /api/tasks/{id}/complete (完成任务)
+    ↓
+记录活动日志
+    ↓
+监控面板实时更新
+</code></pre>
+
+<hr>
+
+<h2>核心功能</h2>
+
+<h3>功能 1: 自主任务认领 ⭐⭐⭐ (P0)</h3>
+
+<strong>需求描述</strong>:
+Agent 唤醒时能够自主认领任务，无需人工分配。
+
+<strong>实现方案</strong>:
+<li><strong>数据库锁机制</strong> - 使用 SQLite 事务锁防止并发冲突</li>
+<li><strong>认领 API</strong> - <code>POST /api/tasks/{id}/claim</code></li>
+<li><strong>超时释放</strong> - 30 分钟无进展自动释放</li>
+<li><strong>任务选择</strong> - 按优先级和角色匹配</li>
+
+<strong>数据表</strong>:
+<pre><code class="language-sql">CREATE TABLE tasks (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    priority TEXT DEFAULT 'P2',
+    status TEXT DEFAULT 'AVAILABLE',  -- AVAILABLE/ASSIGNED/IN_PROGRESS/COMPLETED
+    claimed_by TEXT,                   -- 认领者
+    claimed_at TIMESTAMP,              -- 认领时间
+    ...
+);
+</code></pre>
+
+<strong>API</strong>:
+<pre><code class="language-python">POST /api/tasks/{task_id}/claim
+Body: {"agent_id": "xiaoyun-dev"}
+Response: {"success": true, "task": {...}}
+</code></pre>
+
+<strong>验收标准</strong>:
+<li>[ ] Agent 唤醒时能自动认领任务</li>
+<li>[ ] 多 Agent 不会认领同一任务</li>
+<li>[ ] 认领超时自动释放</li>
+<li>[ ] 活动日志正确记录</li>
+
+<hr>
+
+<h3>功能 2: 任务状态机 ⭐⭐⭐ (P0)</h3>
+
+<strong>需求描述</strong>:
+实现完整的任务状态流转，管理任务生命周期。
+
+<strong>状态流转</strong>:
+<pre><code class="language-">AVAILABLE → ASSIGNED → IN_PROGRESS → COMPLETED
+                           ↓
+                        BLOCKED → AVAILABLE (释放后)
+                           
+COMPLETED → REVIEW → APPROVED
+              ↓
+           REJECTED → IN_PROGRESS (返工)
+</code></pre>
+
+<strong>状态定义</strong>:
+| 状态 | 说明 | 转换条件 |
+|------|------|----------|
+| AVAILABLE | 可用 | 初始状态/释放后 |
+| ASSIGNED | 已分配 | 认领成功 |
+| IN_PROGRESS | 进行中 | Agent 开始执行 |
+| BLOCKED | 阻塞 | 遇到依赖/问题 |
+| REVIEW | 评审中 | 提交交付物 |
+| APPROVED | 已通过 | 评审通过 |
+| REJECTED | 已拒绝 | 评审不通过 |
+| COMPLETED | 已完成 | 最终状态 |
+
+<strong>验收标准</strong>:
+<li>[ ] 状态流转正确</li>
+<li>[ ] 状态变更有日志</li>
+<li>[ ] 不允许非法流转</li>
+
+<hr>
+
+<h3>功能 3: 活动日志 ⭐⭐ (P1)</h3>
+
+<strong>需求描述</strong>:
+记录所有 Agent 操作，支持追溯和审计。
+
+<strong>数据表</strong>:
+<pre><code class="language-sql">CREATE TABLE activity_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agent_id TEXT NOT NULL,
+    action TEXT NOT NULL,  -- claim/start/progress/complete/review/release
+    task_id TEXT,
+    details TEXT,          -- JSON 格式详细信息
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+</code></pre>
+
+<strong>记录场景</strong>:
+<li>Agent 认领任务</li>
+<li>开始执行任务</li>
+<li>更新进度</li>
+<li>完成任务</li>
+<li>释放任务</li>
+<li>评审任务</li>
+
+<strong>API</strong>:
+<pre><code class="language-python">GET /api/activity/logs?agent_id=xiaoyun-dev&limit=50
+Response: {"success": true, "data": [...]}
+</code></pre>
+
+<strong>展示</strong>:
+<li>WebUI 活动 Feed</li>
+<li>按 Agent 筛选</li>
+<li>按任务筛选</li>
+<li>时间排序</li>
+
+<strong>验收标准</strong>:
+<li>[ ] 所有操作都有日志</li>
+<li>[ ] 日志查询性能 < 100ms</li>
+<li>[ ] 支持筛选和分页</li>
+
+<hr>
+
+<h3>功能 4: 实时监控面板 ⭐⭐⭐ (P0)</h3>
+
+<strong>需求描述</strong>:
+实时展示 Agent 状态和任务进度。
+
+<strong>展示内容</strong>:
+<li><strong>Agent 状态卡片</strong></li>
+   - 在线状态 (IDLE/BUSY/OFFLINE)
+   - 当前任务
+   - 进度条
+   - 预计完成时间
+
+<li><strong>任务统计卡片</strong></li>
+   - 总任务数
+   - 可用任务
+   - 进行中
+   - 已完成
+   - 阻塞任务
+
+<li><strong>任务列表</strong></li>
+   - 按状态分组 (进行中/等待中/已完成)
+   - 优先级标识
+   - 执行者信息
+   - 进度条
+
+<li><strong>活动日志 Feed</strong></li>
+   - 实时滚动
+   - 按时间倒序
+   - 支持筛选
+
+<strong>技术实现</strong>:
+<li>当前：原生 JS + 自动刷新 (30 秒)</li>
+<li>后续：Vue 3 + WebSocket (实时)</li>
+
+<strong>验收标准</strong>:
+<li>[ ] 数据自动刷新 (30 秒)</li>
+<li>[ ] 手动刷新按钮</li>
+<li>[ ] 加载状态提示</li>
+<li>[ ] 错误处理</li>
+
+<hr>
+
+<h3>功能 5: 评审打分系统 ⭐⭐ (P1)</h3>
+
+<strong>需求描述</strong>:
+Reviewer 评审交付物，打分并决定是否通过。
+
+<strong>数据表</strong>:
+<pre><code class="language-sql">CREATE TABLE reviews (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    task_id TEXT NOT NULL,
+    reviewer_id TEXT NOT NULL,
+    score INTEGER,           -- 1-5 分
+    decision TEXT,           -- APPROVED/REJECTED
+    comments TEXT,           -- 评审意见
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+</code></pre>
+
+<strong>流程</strong>:
+<pre><code class="language-">Agent 完成任务
+    ↓
+任务状态 → REVIEW
+    ↓
+Reviewer 认领评审任务
+    ↓
+评审交付物
+    ↓
+打分 (1-5 分)
+    ↓
+决定：APPROVED / REJECTED
+    ↓
+APPROVED → 任务完成
+REJECTED → 返工 (状态 → IN_PROGRESS)
+</code></pre>
+
+<strong>验收标准</strong>:
+<li>[ ] 评审流程完整</li>
+<li>[ ] 打分系统正常</li>
+<li>[ ] 返工流程正确</li>
+<li>[ ] 评审记录保存</li>
+
+<hr>
+
+<h3>功能 6: 巡逻监控 ⭐⭐ (P1)</h3>
+
+<strong>需求描述</strong>:
+Patrol Agent 监控系统健康，检测阻塞和异常。
+
+<strong>当前实现</strong>:
+<li><code>agent-health-check.sh</code> 脚本</li>
+<li>每 30 分钟执行</li>
+<li>检测 Agent 健康状态</li>
+
+<strong>目标实现</strong>:
+<li>Patrol Agent (xiaoyun-dispatch)</li>
+<li>定时唤醒 (cron)</li>
+<li>检测阻塞任务</li>
+<li>自动创建告警任务</li>
+<li>通知相关 Agent</li>
+
+<strong>检测项</strong>:
+<li>任务超时 (认领后 30 分钟无进展)</li>
+<li>Agent 假死 (超过 1 小时无活动)</li>
+<li>依赖阻塞 (等待依赖完成任务)</li>
+<li>资源不足 (任务积压)</li>
+
+<strong>验收标准</strong>:
+<li>[ ] 自动检测问题</li>
+<li>[ ] 创建告警任务</li>
+<li>[ ] 通知相关 Agent</li>
+<li>[ ] 记录检测日志</li>
+
+<hr>
+
+<h3>功能 7: Agent 评分系统 ⭐ (P2)</h3>
+
+<strong>需求描述</strong>:
+建立 Agent 积分和排行榜，激励高质量输出。
+
+<strong>数据表</strong>:
+<pre><code class="language-sql">CREATE TABLE scores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agent_id TEXT NOT NULL,
+    task_id TEXT,
+    score_change INTEGER,    -- 积分变化
+    reason TEXT,             -- 原因
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- agents 表增加字段
+ALTER TABLE agents ADD COLUMN score INTEGER DEFAULT 100;
+ALTER TABLE agents ADD COLUMN completed_tasks INTEGER DEFAULT 0;
+</code></pre>
+
+<strong>评分规则</strong>:
+| 行为 | 积分变化 |
+|------|----------|
+| 完成任务 | +10 |
+| 评审通过 | +5 |
+| 评审优秀 (5 分) | +10 |
+| 评审不通过 | -5 |
+| 任务超时 | -10 |
+| 主动释放任务 | -2 |
+
+<strong>排行榜</strong>:
+<li>按积分排序</li>
+<li>按完成任务数排序</li>
+<li>按评审通过率排序</li>
+
+<strong>验收标准</strong>:
+<li>[ ] 积分计算正确</li>
+<li>[ ] 排行榜展示</li>
+<li>[ ] 历史记录可查</li>
+
+<hr>
+
+<h3>功能 8: 循环任务 ⭐ (P2)</h3>
+
+<strong>需求描述</strong>:
+支持周期性任务，如每日备份、每周报告。
+
+<strong>数据表</strong>:
+<pre><code class="language-sql">ALTER TABLE tasks ADD COLUMN recurring TEXT;  -- JSON: {"type": "daily", "time": "03:00"}
+ALTER TABLE tasks ADD COLUMN parent_task_id TEXT;  -- 父任务 (循环任务)
+</code></pre>
+
+<strong>类型</strong>:
+<li>每日 (daily) - 每天执行</li>
+<li>每周 (weekly) - 每周执行</li>
+<li>每月 (monthly) - 每月执行</li>
+<li>自定义 (custom) - CRON 表达式</li>
+
+<strong>流程</strong>:
+<pre><code class="language-">创建循环任务
+    ↓
+到达触发时间
+    ↓
+自动创建子任务
+    ↓
+Agent 认领执行
+    ↓
+完成子任务
+    ↓
+等待下次触发
+</code></pre>
+
+<strong>验收标准</strong>:
+<li>[ ] 循环任务创建</li>
+<li>[ ] 自动触发子任务</li>
+<li>[ ] 子任务管理</li>
+<li>[ ] 循环配置修改</li>
+
+<hr>
+
+<h2>技术实现</h2>
+
+<h3>数据库设计</h3>
+
+<h4>tasks 表</h4>
+<pre><code class="language-sql">CREATE TABLE tasks (
+    id TEXT PRIMARY KEY,              -- TASK-001
+    title TEXT NOT NULL,               -- 任务标题
+    description TEXT,                  -- 任务描述
+    priority TEXT DEFAULT 'P2',        -- P0/P1/P2/P3
+    status TEXT DEFAULT 'AVAILABLE',   -- 状态
+    assignee TEXT,                     -- 执行者 (手动分配)
+    claimed_by TEXT,                   -- 认领者 (自主认领)
+    claimed_at TIMESTAMP,              -- 认领时间
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deadline TIMESTAMP,                -- 截止时间
+    progress INTEGER DEFAULT 0,        -- 进度 0-100
+    estimated_hours INTEGER,           -- 预计工时
+    actual_hours INTEGER,              -- 实际工时
+    module_id TEXT,                    -- 所属模块
+    parent_task_id TEXT,               -- 父任务
+    dependencies TEXT,                 -- 依赖任务 JSON
+    recurring TEXT,                    -- 循环配置 JSON
+    metadata TEXT                      -- 其他元数据 JSON
+);
+
+-- 索引
+CREATE INDEX idx_tasks_status ON tasks(status);
+CREATE INDEX idx_tasks_priority ON tasks(priority);
+CREATE INDEX idx_tasks_claimed_by ON tasks(claimed_by);
+CREATE INDEX idx_tasks_created_at ON tasks(created_at);
+</code></pre>
+
+<h4>agents 表</h4>
+<pre><code class="language-sql">CREATE TABLE agents (
+    id TEXT PRIMARY KEY,               -- xiaoyun-dev
+    name TEXT NOT NULL,                -- 小云开发
+    role TEXT,                         -- developer/tester/recorder
+    status TEXT DEFAULT 'IDLE',        -- IDLE/BUSY/OFFLINE
+    current_task_id TEXT,              -- 当前任务
+    score INTEGER DEFAULT 100,         -- 积分
+    completed_tasks INTEGER DEFAULT 0, -- 完成任务数
+    last_active_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+</code></pre>
+
+<h4>activity_logs 表</h4>
+<pre><code class="language-sql">CREATE TABLE activity_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agent_id TEXT NOT NULL,
+    action TEXT NOT NULL,              -- claim/start/complete/review
+    task_id TEXT,
+    details TEXT,                      -- JSON 详细信息
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_logs_agent_id ON activity_logs(agent_id);
+CREATE INDEX idx_logs_task_id ON activity_logs(task_id);
+CREATE INDEX idx_logs_created_at ON activity_logs(created_at);
+</code></pre>
+
+<h4>reviews 表 (后续)</h4>
+<pre><code class="language-sql">CREATE TABLE reviews (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    task_id TEXT NOT NULL,
+    reviewer_id TEXT NOT NULL,
+    score INTEGER,                     -- 1-5 分
+    decision TEXT,                     -- APPROVED/REJECTED
+    comments TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+</code></pre>
+
+<hr>
+
+<h3>API 设计</h3>
+
+<h4>任务管理 API</h4>
+
+| 端点 | 方法 | 说明 | 认证 |
+|------|------|------|------|
+| <code>/api/tasks/available</code> | GET | 获取可用任务 | 否 |
+| <code>/api/tasks/{id}/claim</code> | POST | 认领任务 | 否 |
+| <code>/api/tasks/{id}/release</code> | POST | 释放任务 | 否 |
+| <code>/api/tasks/{id}/progress</code> | PUT | 更新进度 | 否 |
+| <code>/api/tasks/{id}/complete</code> | POST | 完成任务 | 否 |
+| <code>/api/tasks/{id}</code> | GET | 获取任务详情 | 否 |
+| <code>/api/tasks</code> | GET | 查询任务列表 | 否 |
+| <code>/api/tasks</code> | POST | 创建任务 | 是 (后续) |
+| <code>/api/tasks/{id}</code> | DELETE | 删除任务 | 是 (后续) |
+
+<h4>Agent 管理 API</h4>
+
+| 端点 | 方法 | 说明 | 认证 |
+|------|------|------|------|
+| <code>/api/agents/{id}/status</code> | GET | 获取 Agent 状态 | 否 |
+| <code>/api/agents</code> | GET | 获取所有 Agent | 否 |
+| <code>/api/agents</code> | POST | 注册 Agent | 是 (后续) |
+| <code>/api/agents/{id}</code> | PUT | 更新 Agent | 是 (后续) |
+
+<h4>活动日志 API</h4>
+
+| 端点 | 方法 | 说明 | 认证 |
+|------|------|------|------|
+| <code>/api/activity/logs</code> | GET | 获取活动日志 | 否 |
+| <code>/api/activity/logs/{id}</code> | GET | 获取日志详情 | 否 |
+
+<h4>评审 API (后续)</h4>
+
+| 端点 | 方法 | 说明 | 认证 |
+|------|------|------|------|
+| <code>/api/reviews</code> | POST | 创建评审 | 否 |
+| <code>/api/reviews/{id}</code> | PUT | 更新评审 | 否 |
+| <code>/api/reviews/task/{task_id}</code> | GET | 获取任务评审 | 否 |
+
+<hr>
+
+<h3>Agent 唤醒逻辑</h3>
+
+<pre><code class="language-javascript">const API_BASE = 'http://localhost:6565/api';
+
+async function wakeUp() {
+  console.log(<code>[${this.agentId}] 唤醒...</code>);
+  
+  try {
+    // 1. 获取可用任务
+    const availableTasks = await this.getAvailableTasks();
+    
+    if (availableTasks.length === 0) {
+      console.log(<code>[${this.agentId}] 无可用任务</code>);
+      return;
+    }
+    
+    // 2. 选择适合的任务
+    const suitableTask = this.selectTask(availableTasks);
+    
+    if (!suitableTask) {
+      console.log(<code>[${this.agentId}] 没有适合的任务</code>);
+      return;
+    }
+    
+    // 3. 尝试认领
+    const claimResult = await this.claimTask(suitableTask.id);
+    
+    if (!claimResult.success) {
+      console.log(<code>[${this.agentId}] 认领失败：${claimResult.error}</code>);
+      return;
+    }
+    
+    // 4. 执行任务
+    console.log(<code>[${this.agentId}] 开始执行任务：${suitableTask.title}</code>);
+    await this.executeTask(suitableTask);
+    
+    // 5. 提交交付物
+    await this.submitDeliverable(suitableTask.id);
+    
+  } catch (error) {
+    console.error(<code>[${this.agentId}] 唤醒失败:</code>, error);
+  }
+}
+
+async function getAvailableTasks() {
+  const response = await fetch(<code>${API_BASE}/tasks/available</code>);
+  const data = await response.json();
+  
+  if (data.success) {
+    return data.data;
+  } else {
+    return [];
+  }
+}
+
+function selectTask(tasks) {
+  // 1. 按角色筛选
+  const suitable = tasks.filter(task => 
+    this.matchRole(task, this.role)
+  );
+  
+  // 2. 按优先级排序
+  suitable.sort((a, b) => {
+    const priorityOrder = { 'P0': 0, 'P1': 1, 'P2': 2, 'P3': 3 };
+    return priorityOrder[a.priority] - priorityOrder[b.priority];
+  });
+  
+  // 3. 返回最高优先级的任务
+  return suitable[0];
+}
+
+async function claimTask(taskId) {
+  const response = await fetch(<code>${API_BASE}/tasks/${taskId}/claim</code>, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      agent_id: this.agentId
+    })
+  });
+  
+  return await response.json();
+}
+</code></pre>
+
+<hr>
+
+<h3>前端展示</h3>
+
+<h4>监控面板布局</h4>
+
+<pre><code class="language-">┌──────────────────────────────────────────────────────────┐
+│  📋 需求任务公告板                            🔄 刷新     │
+├──────────────────────────────────────────────────────────┤
+│  团队状态                                                 │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │
+│  │ 开发 │ │ 测试 │ │ 记录 │ │ 评审 │ │ 调度 │ │ 推书 │ │
+│  │ 🟢   │ │ 🟡   │ │ 🔴   │ │ 🟡   │ │ 🟢   │ │ 🟡   │ │
+│  │ TASK │ │ -    │ │ -    │ │ -    │ │ TASK │ │ -    │ │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ │
+├──────────────────────────────────────────────────────────┤
+│  任务统计                                                 │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐       │
+│  │ 全部 │ │ 可用 │ │ 进行│ │ 等待│ │ 评审│ │ 完成│       │
+│  │  20 │ │  15 │ │  3  │ │  0  │ │  2  │ │  0  │       │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘       │
+├──────────────────────────────────────────────────────────┤
+│  任务列表 (Kanban)                                        │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐                    │
+│  │ 进行中  │ │ 等待中  │ │ 已完成  │                    │
+│  │ TASK-1  │ │ TASK-4  │ │ TASK-7  │                    │
+│  │ TASK-2  │ │ TASK-5  │ │ TASK-8  │                    │
+│  │ TASK-3  │ │         │ │         │                    │
+│  └─────────┘ └─────────┘ └─────────┘                    │
+├──────────────────────────────────────────────────────────┤
+│  活动日志                                                 │
+│  [12:30] xiaoyun-dev 认领了 TASK-001                     │
+│  [12:28] xiaoyun-test 完成了 TASK-002                    │
+│  [12:25] xiaoyun-recorder 更新了进度 50%                 │
+│  ...                                                      │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+
+<hr>
+
+<h2>实施计划</h2>
+
+<h3>Phase 1: 数据动态更新 (✅ 已完成)</h3>
+
+<strong>时间</strong>: 2026-03-15  
+<strong>状态</strong>: ✅ 完成
+
+<strong>任务</strong>:
+<li>[x] 自动刷新功能 (30 秒)</li>
+<li>[x] 手动刷新按钮</li>
+<li>[x] 加载状态提示</li>
+<li>[x] 错误处理</li>
+
+<strong>交付物</strong>:
+<li><code>fileserver/files/task-board/js/dashboard.js</code></li>
+
+<hr>
+
+<h3>Phase 2: 数据库与 API (✅ 已完成)</h3>
+
+<strong>时间</strong>: 2026-03-15  
+<strong>状态</strong>: ✅ 完成
+
+<strong>任务</strong>:
+<li>[x] 数据库表设计 (tasks/agents/activity_logs)</li>
+<li>[x] 认领 API 实现</li>
+<li>[x] 数据库锁机制</li>
+<li>[x] 活动日志 API</li>
+
+<strong>交付物</strong>:
+<li><code>task-board/database/task-board.db</code></li>
+<li><code>task-board/backend/claim-api.py</code></li>
+
+<hr>
+
+<h3>Phase 3: Agent 唤醒改造 (🟠 进行中)</h3>
+
+<strong>时间</strong>: 2026-03-16  
+<strong>状态</strong>: 🟠 待开始
+
+<strong>任务</strong>:
+<li>[ ] Agent 唤醒逻辑改造</li>
+<li>[ ] 任务选择逻辑</li>
+<li>[ ] 认领调用实现</li>
+<li>[ ] 测试验证</li>
+
+<strong>交付物</strong>:
+<li><code>skills/agent-core/src/wake-up.js</code></li>
+
+<hr>
+
+<h3>Phase 4: 数据迁移 (⏳ 待开始)</h3>
+
+<strong>时间</strong>: 2026-03-16  
+<strong>状态</strong>: ⏳ 待开始
+
+<strong>任务</strong>:
+<li>[ ] 迁移脚本开发</li>
+<li>[ ] 执行数据迁移</li>
+<li>[ ] 数据校验</li>
+<li>[ ] 备份回滚方案</li>
+
+<strong>交付物</strong>:
+<li><code>task-board/scripts/migrate-to-db.js</code></li>
+
+<hr>
+
+<h3>Phase 5: 超时释放 (⏳ 待开始)</h3>
+
+<strong>时间</strong>: 2026-03-17  
+<strong>状态</strong>: ⏳ 待开始
+
+<strong>任务</strong>:
+<li>[ ] 超时检测脚本</li>
+<li>[ ] cron 配置</li>
+<li>[ ] 日志记录</li>
+<li>[ ] 监控告警</li>
+
+<strong>交付物</strong>:
+<li><code>task-board/scripts/release-timeout-tasks.js</code></li>
+
+<hr>
+
+<h3>Phase 6: 评审打分系统 (⏳ 待开始)</h3>
+
+<strong>时间</strong>: 2026-03-18  
+<strong>状态</strong>: ⏳ 待开始
+
+<strong>任务</strong>:
+<li>[ ] reviews 表创建</li>
+<li>[ ] 评审 API 实现</li>
+<li>[ ] 打分逻辑</li>
+<li>[ ] 返工流程</li>
+
+<strong>交付物</strong>:
+<li><code>task-board/backend/review-api.py</code></li>
+
+<hr>
+
+<h3>Phase 7: 巡逻监控 (⏳ 待开始)</h3>
+
+<strong>时间</strong>: 2026-03-19  
+<strong>状态</strong>: ⏳ 待开始
+
+<strong>任务</strong>:
+<li>[ ] Patrol Agent 改造</li>
+<li>[ ] 检测逻辑实现</li>
+<li>[ ] 告警任务创建</li>
+<li>[ ] 通知机制</li>
+
+<strong>交付物</strong>:
+<li><code>skills/agent-patrol/</code></li>
+
+<hr>
+
+<h3>Phase 8: 活动日志 Feed (⏳ 待开始)</h3>
+
+<strong>时间</strong>: 2026-03-19  
+<strong>状态</strong>: ⏳ 待开始
+
+<strong>任务</strong>:
+<li>[ ] 活动日志页面</li>
+<li>[ ] 实时滚动</li>
+<li>[ ] 筛选功能</li>
+<li>[ ] 搜索功能</li>
+
+<strong>交付物</strong>:
+<li><code>fileserver/files/task-board/feed.html</code></li>
+
+<hr>
+
+<h3>Phase 9: Agent 评分系统 (⏳ 待开始)</h3>
+
+<strong>时间</strong>: 2026-03-20  
+<strong>状态</strong>: ⏳ 待开始
+
+<strong>任务</strong>:
+<li>[ ] scores 表创建</li>
+<li>[ ] 评分规则实现</li>
+<li>[ ] 排行榜页面</li>
+<li>[ ] 历史记录</li>
+
+<strong>交付物</strong>:
+<li><code>task-board/backend/score-api.py</code></li>
+<li><code>fileserver/files/task-board/leaderboard.html</code></li>
+
+<hr>
+
+<h3>Phase 10: 循环任务 (⏳ 待开始)</h3>
+
+<strong>时间</strong>: 2026-03-21  
+<strong>状态</strong>: ⏳ 待开始
+
+<strong>任务</strong>:
+<li>[ ] 循环配置</li>
+<li>[ ] 自动触发</li>
+<li>[ ] 子任务管理</li>
+<li>[ ] 配置管理</li>
+
+<strong>交付物</strong>:
+<li><code>task-board/backend/recurring-api.py</code></li>
+
+<hr>
+
+<h2>验收标准</h2>
+
+<h3>功能验收</h3>
+
+<h4>自主任务认领</h4>
+<li>[ ] Agent 唤醒时能自动认领任务</li>
+<li>[ ] 多 Agent 不会认领同一任务</li>
+<li>[ ] 认领超时自动释放 (30 分钟)</li>
+<li>[ ] 任务状态正确更新</li>
+<li>[ ] 活动日志正确记录</li>
+
+<h4>任务状态机</h4>
+<li>[ ] 状态流转正确</li>
+<li>[ ] 状态变更有日志</li>
+<li>[ ] 不允许非法流转</li>
+<li>[ ] 支持返工流程</li>
+
+<h4>活动日志</h4>
+<li>[ ] 所有操作都有日志</li>
+<li>[ ] 日志查询性能 < 100ms</li>
+<li>[ ] 支持筛选和分页</li>
+<li>[ ] Feed 页面展示</li>
+
+<h4>监控面板</h4>
+<li>[ ] 数据自动刷新 (30 秒)</li>
+<li>[ ] 手动刷新按钮</li>
+<li>[ ] 加载状态提示</li>
+<li>[ ] 错误处理</li>
+<li>[ ] Agent 状态卡片</li>
+<li>[ ] 任务统计卡片</li>
+<li>[ ] 任务列表 (Kanban)</li>
+
+<h4>评审打分</h4>
+<li>[ ] 评审流程完整</li>
+<li>[ ] 打分系统正常 (1-5 分)</li>
+<li>[ ] 返工流程正确</li>
+<li>[ ] 评审记录保存</li>
+
+<h4>巡逻监控</h4>
+<li>[ ] 自动检测问题</li>
+<li>[ ] 创建告警任务</li>
+<li>[ ] 通知相关 Agent</li>
+<li>[ ] 记录检测日志</li>
+
+<h4>评分系统</h4>
+<li>[ ] 积分计算正确</li>
+<li>[ ] 排行榜展示</li>
+<li>[ ] 历史记录可查</li>
+
+<h4>循环任务</h4>
+<li>[ ] 循环任务创建</li>
+<li>[ ] 自动触发子任务</li>
+<li>[ ] 子任务管理</li>
+<li>[ ] 循环配置修改</li>
+
+<hr>
+
+<h3>性能验收</h3>
+
+<li>[ ] 认领 API 响应时间 < 200ms</li>
+<li>[ ] 支持并发认领 (10 个 Agent 同时)</li>
+<li>[ ] 数据库事务无死锁</li>
+<li>[ ] 日志查询性能 < 100ms</li>
+<li>[ ] 页面加载时间 < 2 秒</li>
+
+<hr>
+
+<h3>数据验收</h3>
+
+<li>[ ] 现有任务文件迁移到数据库</li>
+<li>[ ] 数据完整性校验通过</li>
+<li>[ ] 文件与数据库数据一致</li>
+<li>[ ] 备份回滚方案验证通过</li>
+
+<hr>
+
+<h2>风险评估</h2>
+
+<h3>技术风险</h3>
+
+| 风险 | 概率 | 影响 | 应对措施 |
+|------|------|------|----------|
+| 数据库锁冲突 | 中 | 中 | 使用 FOR UPDATE，设置超时 |
+| 数据迁移丢失 | 低 | 高 | 完整备份，数据校验 |
+| Agent 认领后假死 | 中 | 中 | 30 分钟超时释放，Patrol 监控 |
+| API 性能瓶颈 | 低 | 中 | 索引优化，缓存策略 |
+| 并发认领冲突 | 中 | 中 | 事务锁，重试机制 |
+
+<h3>实施风险</h3>
+
+| 风险 | 概率 | 影响 | 应对措施 |
+|------|------|------|----------|
+| 需求变更 | 中 | 中 | 敏捷开发，快速迭代 |
+| 人员不足 | 低 | 高 | 优先级排序，分阶段实施 |
+| 时间延期 | 中 | 中 | 预留缓冲时间 |
+| 技术难点 | 低 | 中 | 提前调研，技术预研 |
+
+<hr>
+
+<h2>文档清单</h2>
+
+| 文档 | 路径 | 状态 |
+|------|------|------|
+| <strong>需求文档</strong> | <code>task-board/requirements/REQ-20260315-003.md</code> | ✅ 完成 |
+| <strong>完整需求</strong> | <code>docs/OPENMOSS-FULL-REQUIREMENTS.md</code> | ✅ 完成 (本文档) |
+| <strong>对比分析</strong> | <code>docs/OPENMOSS-COMPARISON.md</code> | ✅ 完成 |
+| <strong>API 文档</strong> | <code>task-board/docs/API-REFERENCE.md</code> | ⏳ 待开始 |
+| <strong>数据库设计</strong> | <code>task-board/docs/DATABASE-SCHEMA.md</code> | ⏳ 待开始 |
+| <strong>部署指南</strong> | <code>task-board/docs/DEPLOYMENT.md</code> | ⏳ 待开始 |
+| <strong>用户手册</strong> | <code>task-board/docs/USER-MANUAL.md</code> | ⏳ 待开始 |
+
+<hr>
+
+<h2>访问链接</h2>
+
+<h3>现有系统</h3>
+
+| 资源 | URL | 说明 |
+|------|-----|------|
+| <strong>监控面板</strong> | https://yun.webyoung.cn/task-board/ | 主入口 |
+| <strong>任务数据</strong> | https://yun.webyoung.cn/task-board/data.json | JSON 数据 |
+
+<h3>开发中</h3>
+
+| 资源 | URL | 说明 |
+|------|-----|------|
+| <strong>API 文档</strong> | http://localhost:6565/docs | Swagger UI (待启动) |
+| <strong>活动日志</strong> | 待开发 | - |
+| <strong>排行榜</strong> | 待开发 | - |
+
+<h3>参考项目</h3>
+
+| 项目 | URL | 说明 |
+|------|-----|------|
+| <strong>OpenMOSS</strong> | https://github.com/d9g/OpenMOSS | 参考项目 |
+| <strong>OpenMOSS 中文</strong> | https://github.com/d9g/OpenMOSS/blob/main/README_CN.md | 中文文档 |
+| <strong>1M Reviews</strong> | https://1m-reviews.com/ | Live Demo |
+| <strong>Agent Feed</strong> | https://goai.love/feed | 活动日志示例 |
+
+<hr>
+
+<h2>审批流程</h2>
+
+<h3>需求评审</h3>
+
+<strong>评审人</strong>: 用户 👤  
+<strong>评审时间</strong>: 待确认  
+<strong>评审结果</strong>: ⏳ 待评审
+
+<strong>评审要点</strong>:
+<li>需求是否完整？</li>
+<li>优先级是否合理？</li>
+<li>技术方案是否可行？</li>
+<li>实施计划是否现实？</li>
+
+<h3>评审意见</h3>
+
+<pre><code class="language-">[待填写]
+</code></pre>
+
+<h3>评审结论</h3>
+
+<li>[ ] 通过，开始实施</li>
+<li>[ ] 修改后通过</li>
+<li>[ ] 需要重新评审</li>
+
+<hr>
+
+<strong>文档创建</strong>: 2026-03-15 20:30  
+<strong>创建人</strong>: 小云 ☁️  
+<strong>评审人</strong>: 用户 👤  
+<strong>状态</strong>: 🟠 待评审
+
+<hr>
+
+_对标 OpenMOSS，打造专业的多 Agent 监控与协作系统！_ 🤖☁️
+
+        
+        <div class="footer">
+            <p>文档生成时间：2026-03-15 20:41:43</p>
+            <p>对标 OpenMOSS，打造专业的多 Agent 监控与协作系统！🤖☁️</p>
+        </div>
+    </div>
+</body>
+</html>

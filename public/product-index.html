@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 小云项目产品文档索引</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h1 { font-size: 26px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        h4 { font-size: 16px; }
+        
+        p {
+            margin: 15px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        /* AI 绘图提示词容器 */
+        .prompt-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .prompt-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .prompt-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .prompt-title {
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-content {
+            padding: 20px;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .prompt-header {
+                flex-wrap: wrap;
+            }
+            
+            .prompt-title {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+        }
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* 复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #48bb78;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .highlight h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+            border-bottom: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 📚 小云项目产品文档索引</h1>
+            <p>小云推书 · 小说推文变现专家</p>
+        </div>
+        
+        <div class="content">
+            <h1>📚 小云项目产品文档索引</h1></p><p><strong>最后更新</strong>: 2026-03-11 21:45
+<strong>维护</strong>: 小云写作 ✍️
+<strong>排序</strong>: 按日期倒序</p><p>---</p><p><h2>📋 索引说明</h2></p><p>本文档汇总所有已发布的项目产品文档，按日期倒序排列，方便快速查阅最新资料。</p><p>---</p><p><h2>🗂️ 文档分类</h2></p><p>| 分类 | 说明 | 文档数 |</p><p><table><thead><tr><th>📋 <strong>任务管理系统</strong></th><th>任务公告板、系统设计、Agent 配置</th><th>9</th></tr></thead><tbody><tr><td>📖 <strong>小说推文</strong></td><td>推文方案、视频指南、热点分析</td><td>6</td></tr><tr><td>🔧 <strong>技术架构</strong></td><td>HTTP 服务、备份恢复、部署指南</td><td>4</td></tr><tr><td>📝 <strong>会议记录</strong></td><td>设计评审、阶段报告</td><td>3</td></tr></tbody></table></p><p><strong>总计</strong>: 22 个文档</p><p>---</p><p><h2>📅 2026-03-11 (今日)</h2></p><p><h3>📋 任务管理系统</h3></p><p>| 文档名称 | 类型 | HTTP 链接 | 大小 | 说明 |</p><p><table><thead><tr><th><strong>Phase 1 进度报告</strong></th><th>进度</th><th><a href="https://yun.webyoung.cn/task-board/20260311-phase1-progress-report.html" target="_blank">HTML</a></th><th>14.5 KB</th><th>Phase 1 开发进度</th></tr></thead><tbody><tr><td><strong>HTTP 架构整理报告</strong></td><td>报告</td><td><a href="https://yun.webyoung.cn/202603/20260311-http-architecture-report.html" target="_blank">HTML</a></td><td>16.9 KB</td><td>文档整理完成报告</td></tr><tr><td><strong>任务公告板</strong></td><td>应用</td><td><a href="https://yun.webyoung.cn/task-board/" target="_blank">HTML</a></td><td>8.1 KB</td><td>任务管理前端</td></tr><tr><td><strong>部署说明</strong></td><td>指南</td><td><a href="https://yun.webyoung.cn/task-board/task-board-deployment.html" target="_blank">HTML</a></td><td>13.9 KB</td><td>HTTP 服务部署</td></tr><tr><td><strong>HTTP 服务架构</strong></td><td>架构</td><td><a href="https://yun.webyoung.cn/task-board/http-service-architecture.html" target="_blank">HTML</a></td><td>20.8 KB</td><td>完整架构文档</td></tr><tr><td><strong>系统设计文档 v3.0</strong></td><td>设计</td><td><a href="https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html" target="_blank">HTML</a></td><td>33.6 KB</td><td>多 Agent 协作系统</td></tr><tr><td><strong>Agent 配置文档 v1.0</strong></td><td>配置</td><td><a href="https://yun.webyoung.cn/task-board/AGENT-CONFIG.html" target="_blank">HTML</a></td><td>18.2 KB</td><td>5 个 Agent 配置</td></tr><tr><td><strong>小云评委职责定位</strong></td><td>规范</td><td><a href="https://yun.webyoung.cn/task-board/note-judge-role-definition.html" target="_blank">HTML</a></td><td>13.9 KB</td><td>评委角色定义</td></tr><tr><td><strong>备份恢复指南</strong></td><td>指南</td><td><a href="https://yun.webyoung.cn/task-board/backup-restore-guide.html" target="_blank">HTML</a></td><td>18.6 KB</td><td>完整备份恢复</td></tr></tbody></table></p><p><h3>📖 小说推文</h3></p><p>| 文档名称 | 类型 | HTTP 链接 | 大小 | 说明 |</p><p><table><thead><tr><th><strong>热点分析</strong></th><th>分析</th><th><a href="https://yun.webyoung.cn/20260311/xiaoyun-hotspots-20260311.html" target="_blank">HTML</a></th><th>14.2 KB</th><th>2026-03-11 热点</th></tr></thead><tbody><tr><td><strong>推文方案 - J9kAbJz3wIk</strong></td><td>方案</td><td><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-plan-full.html" target="_blank">HTML</a></td><td>48.1 KB</td><td>完整推文方案</td></tr><tr><td><strong>视频指南 - J9kAbJz3wIk</strong></td><td>指南</td><td><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-video-guide.html" target="_blank">HTML</a></td><td>48.8 KB</td><td>AI 绘图视频指南</td></tr><tr><td><strong>完整推文指南</strong></td><td>指南</td><td><a href="https://yun.webyoung.cn/20260311/novel-guide-complete.html" target="_blank">HTML</a></td><td>25.6 KB</td><td>推文完整流程</td></tr></tbody></table></p><p>---</p><p><h2>📅 2026-03-10</h2></p><p><h3>📖 小说推文</h3></p><p>| 文档名称 | 类型 | HTTP 链接 | 大小 | 说明 |</p><p><table><thead><tr><th><strong>推文推广指南</strong></th><th>指南</th><th><a href="https://yun.webyoung.cn/20260310/novel-promotion-guide.html" target="_blank">HTML</a></th><th>18.3 KB</th><th>推广策略指南</th></tr></thead><tbody><tr><td><strong>热点分析</strong></td><td>分析</td><td><a href="https://yun.webyoung.cn/20260310/xiaoyun-hotspots-20260310.html" target="_blank">HTML</a></td><td>17.0 KB</td><td>2026-03-10 热点</td></tr></tbody></table></p><p>---</p><p><h2>📅 2026-03-08</h2></p><p><h3>🔧 技术架构</h3></p><p>| 文档名称 | 类型 | HTTP 链接 | 大小 | 说明 |</p><p>| <strong>技能清单</strong> | 清单 | <a href="https://yun.webyoung.cn/20260308/skills-catalog.html" target="_blank">HTML</a> | - | 已安装技能列表 |</p><p>---</p><p><h2>🔍 快速检索</h2></p><p><h3>按主题分类</h3></p><p><h4>系统架构</h4>
+<li><a href="https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html" target="_blank">系统设计文档 v3.0</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/http-service-architecture.html" target="_blank">HTTP 服务架构</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/AGENT-CONFIG.html" target="_blank">Agent 配置文档 v1.0</a></li></p><p><h4>部署运维</h4>
+<li><a href="https://yun.webyoung.cn/task-board/task-board-deployment.html" target="_blank">部署说明</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/backup-restore-guide.html" target="_blank">备份恢复指南</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/20260311-phase1-progress-report.html" target="_blank">Phase 1 进度报告</a></li></p><p><h4>开发规范</h4>
+<li><a href="https://yun.webyoung.cn/task-board/note-judge-role-definition.html" target="_blank">小云评委职责定位</a></li>
+<li><a href="https://yun.webyoung.cn/202603/20260311-http-architecture-report.html" target="_blank">HTTP 架构整理报告</a></li></p><p><h4>应用工具</h4>
+<li><a href="https://yun.webyoung.cn/task-board/" target="_blank">任务公告板</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/http-links-summary.html" target="_blank">HTTP 链接汇总</a></li></p><p><h4>小说推文</h4>
+<li><a href="https://yun.webyoung.cn/20260311/novel-guide-complete.html" target="_blank">完整推文指南</a></li>
+<li><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-plan-full.html" target="_blank">推文方案 - J9kAbJz3wIk</a></li>
+<li><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-video-guide.html" target="_blank">视频指南 - J9kAbJz3wIk</a></li>
+<li><a href="https://yun.webyoung.cn/20260310/novel-promotion-guide.html" target="_blank">推文推广指南</a></li></p><p>---</p><p><h2>📊 统计信息</h2></p><p><h3>文档分布</h3></p><p>| 日期 | 文档数 | 总大小 |</p><p><table><thead><tr><th>2026-03-11</th><th>13</th><th>~320 KB</th></tr></thead><tbody><tr><td>2026-03-10</td><td>2</td><td>~35 KB</td></tr><tr><td>2026-03-08</td><td>1</td><td>~未知</td></tr><tr><td><strong>总计</strong></td><td><strong>16</strong></td><td><strong>~355 KB</strong></td></tr></tbody></table></p><p><h3>分类统计</h3></p><p>| 分类 | 文档数 | 占比 |</p><p><table><thead><tr><th>任务管理系统</th><th>9</th><th>56%</th></tr></thead><tbody><tr><td>小说推文</td><td>4</td><td>25%</td></tr><tr><td>技术架构</td><td>2</td><td>13%</td></tr><tr><td>会议记录</td><td>1</td><td>6%</td></tr></tbody></table></p><p>---</p><p><h2>🎯 常用入口</h2></p><p><h3>新用户必读</h3>
+<li><a href="https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html" target="_blank">系统设计文档 v3.0</a> - 了解整体架构</li>
+<li><a href="https://yun.webyoung.cn/task-board/AGENT-CONFIG.html" target="_blank">Agent 配置文档 v1.0</a> - 认识 5 个 Agent</li>
+<li><a href="https://yun.webyoung.cn/task-board/" target="_blank">任务公告板</a> - 使用任务系统</li></p><p><h3>开发者必读</h3>
+<li><a href="https://yun.webyoung.cn/task-board/http-service-architecture.html" target="_blank">HTTP 服务架构</a> - 技术架构详解</li>
+<li><a href="https://yun.webyoung.cn/task-board/task-board-deployment.html" target="_blank">部署说明</a> - 部署指南</li>
+<li><a href="https://yun.webyoung.cn/task-board/backup-restore-guide.html" target="_blank">备份恢复指南</a> - 备份策略</li></p><p><h3>推文创作者必读</h3>
+<li><a href="https://yun.webyoung.cn/20260311/novel-guide-complete.html" target="_blank">完整推文指南</a> - 完整流程</li>
+<li><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-plan-full.html" target="_blank">推文方案 - J9kAbJz3wIk</a> - 实战案例</li>
+<li><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-video-guide.html" target="_blank">视频指南 - J9kAbJz3wIk</a> - AI 绘图指南</li></p><p>---</p><p><h2>📝 更新日志</h2></p><p>| 日期 | 更新内容 | 文档数 |</p><p><table><thead><tr><th>2026-03-11 21:45</th><th>创建完整索引页，按日期倒序</th><th>16</th></tr></thead><tbody><tr><td>2026-03-11 19:30</td><td>更新 HTTP 链接汇总 (12 个文档)</td><td>12</td></tr><tr><td>2026-03-11 18:50</td><td>初始汇总 (8 个文档)</td><td>8</td></tr></tbody></table></p><p>---</p><p><h2>🔗 相关资源</h2></p><p><h3>内部资源</h3>
+<li><a href="https://yun.webyoung.cn/202603/MEMORY.html" target="_blank">小云记忆</a> - 长期记忆</li>
+<li><a href="https://yun.webyoung.cn/20260308/skills-catalog.html" target="_blank">技能清单</a> - 已安装技能</li></p><p><h3>外部资源</h3>
+<li><a href="https://docs.openclaw.ai" target="_blank">OpenClaw 文档</a></li>
+<li><a href="https://clawhub.com" target="_blank">ClawHub 技能市场</a></li>
+<li><a href="https://github.com/d9g/person" target="_blank">GitHub 私有项目</a></li></p><p>---</p><p><h2>💡 使用建议</h2></p><p><li><strong>按日期浏览</strong>: 最新文档在最上方，优先阅读</li>
+<li><strong>按分类查找</strong>: 根据需求选择对应分类</li>
+<li><strong>常用入口</strong>: 快速访问高频文档</li>
+<li><strong>定期更新</strong>: 每日新增文档自动纳入索引</li></p><p>---</p><p><strong>小云写作</strong>: ✍️ 项目产品文档索引整理完成，共 16 个文档，按日期倒序排列！</p><p>_最后更新：2026-03-11 21:45 | 小云写作 ✍️_
+
+        </div>
+        
+        <div class="footer">
+            <p>Generated by <strong>小云推书</strong> 📖 | 2026/3/11</p>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                运行环境：阿里云 iZ6weg099z8odxhxeq49hzZ
+            </p>
+        </div>
+    </div>
+    
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">✅ 已复制到剪贴板！</div>
+    
+    <script>
+        // 复制提示词功能
+        function copyPrompt(button) {
+            const prompt = decodeURIComponent(button.getAttribute('data-prompt'));
+            
+            navigator.clipboard.writeText(prompt).then(() => {
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                
+                // 更改按钮文字
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                
+                // 2 秒后恢复
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                // 降级方案：使用 textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                button.textContent = '✅ 已复制';
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = '📋 一键复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

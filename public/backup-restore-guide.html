@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📦 OpenClaw 备份与恢复完整指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h1 { font-size: 26px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        h4 { font-size: 16px; }
+        
+        p {
+            margin: 15px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        /* AI 绘图提示词容器 */
+        .prompt-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .prompt-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .prompt-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .prompt-title {
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-content {
+            padding: 20px;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .prompt-header {
+                flex-wrap: wrap;
+            }
+            
+            .prompt-title {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+        }
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* 复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #48bb78;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .highlight h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+            border-bottom: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 📦 OpenClaw 备份与恢复完整指南</h1>
+            <p>小云推书 · 小说推文变现专家</p>
+        </div>
+        
+        <div class="content">
+            <h1>📦 OpenClaw 备份与恢复完整指南</h1></p><p><strong>版本</strong>: v1.0
+<strong>创建时间</strong>: 2026-03-11 18:50
+<strong>负责人</strong>: 小云记录 📝</p><p>---</p><p><h2>📋 目录</h2></p><p><li><a href="#备份范围" target="_blank">备份范围</a></li>
+<li><a href="#恢复流程" target="_blank">恢复流程</a></li>
+<li><a href="#跨机器恢复" target="_blank">跨机器恢复</a></li>
+<li><a href="#验证清单" target="_blank">验证清单</a></li>
+<li><a href="#常见问题" target="_blank">常见问题</a></li></p><p>---</p><p><h2>备份范围</h2></p><p><h3>✅ 已备份内容</h3></p><p>| 类别 | 内容 | 路径 | 状态 |</p><p><table><thead><tr><th><strong>主配置</strong></th><th>openclaw.json</th><th>~/.openclaw/</th><th>✅</th></tr></thead><tbody><tr><td><strong>定时任务</strong></td><td>cron/jobs.json</td><td>~/.openclaw/cron/</td><td>✅</td></tr><tr><td><strong>设备配置</strong></td><td>devices/*.json</td><td>~/.openclaw/devices/</td><td>✅</td></tr><tr><td><strong>Agent 配置</strong></td><td>agents/*</td><td>~/.openclaw/agents/</td><td>✅ 新增</td></tr><tr><td><strong>Workspace</strong></td><td>*.md</td><td>~/workspace/</td><td>✅</td></tr><tr><td><strong>记忆文件</strong></td><td>memory/*</td><td>~/workspace/memory/</td><td>✅</td></tr><tr><td><strong>学习日志</strong></td><td>.learnings/*</td><td>~/workspace/.learnings/</td><td>✅</td></tr><tr><td><strong>技能文件</strong></td><td>skills/*</td><td>~/workspace/skills/</td><td>✅</td></tr><tr><td><strong>插件配置</strong></td><td>extensions/*</td><td>~/.openclaw/extensions/</td><td>✅</td></tr><tr><td><strong>ClawHub</strong></td><td>~/.clawhub/*</td><td>~</td><td>✅</td></tr></tbody></table></p><p><h3>📊 备份统计</h3></p><p>| 项目 | 数量 |</p><p><table><thead><tr><th><strong>Agent</strong></th><th>5 个 (小云、小云评委、小云记录、小云开发、推书酱)</th></tr></thead><tbody><tr><td><strong>技能</strong></td><td>11+ 个</td></tr><tr><td><strong>记忆文件</strong></td><td>每日记忆 + 长期记忆</td></tr><tr><td><strong>文档</strong></td><td>8+ 个 HTTP 可访问文档</td></tr></tbody></table></p><p>---</p><p><h2>恢复流程</h2></p><p><h3>方式 A：完整恢复（推荐）</h3></p><p><pre><code class="language-bash"><h1>1. 找到最新备份</h1>
+cd /home/admin/.openclaw/workspace/person/xiaoyun/backups/
+ls -la xiaoyun/</p><p><h1>2. 执行恢复</h1>
+./scripts/restore.sh /home/admin/.openclaw/workspace/person/xiaoyun/backups/xiaoyun/20260311-184500</p><p><h1>3. 验证恢复</h1>
+openclaw agents list
+openclaw skills list</p><p><h1>4. 重启 Gateway</h1>
+openclaw gateway restart
+</code></pre></p><p><h3>方式 B：手动恢复特定文件</h3></p><p><pre><code class="language-bash"><h1>恢复 Agent 配置</h1>
+cp -r /path/to/backup/agents/* ~/.openclaw/agents/</p><p><h1>恢复记忆文件</h1>
+cp -r /path/to/backup/workspace/memory/* ~/workspace/memory/</p><p><h1>恢复技能文件</h1>
+cp -r /path/to/backup/workspace/skills/* ~/workspace/skills/
+</code></pre></p><p>---</p><p><h2>跨机器恢复</h2></p><p><h3>场景：在新机器上 Clone 一个一模一样的团队</h3></p><p><h4>前提条件</h4>
+<li>新机器已安装 OpenClaw</li>
+<li>已配置相同的认证信息（API Key 等）</li>
+<li>可访问备份文件（Git 仓库或文件传输）</li></p><p><h4>恢复步骤</h4></p><p><pre><code class="language-bash"><h1>1. 克隆备份仓库（或传输备份文件）</h1>
+git clone git@github.com:d9g/person.git /tmp/openclaw-backup</p><p><h1>2. 找到最新备份</h1>
+ls -la /tmp/openclaw-backup/xiaoyun/backups/xiaoyun/</p><p><h1>3. 执行恢复脚本</h1>
+bash /tmp/openclaw-backup/xiaoyun/scripts/restore.sh \
+  /tmp/openclaw-backup/xiaoyun/backups/xiaoyun/20260311-184500</p><p><h1>4. 验证 Agent 配置</h1>
+openclaw agents list
+<h1>应该看到：</h1>
+<h1>- main (小云)</h1>
+<h1>- xiaoyun-novel (推书酱)</h1>
+<h1>- xiaoyun-judge (小云评委)</h1>
+<h1>- xiaoyun-recorder (小云记录)</h1>
+<h1>- xiaoyun-dev (小云开发)</h1></p><p><h1>5. 验证技能配置</h1>
+openclaw skills list</p><p><h1>6. 验证 HTTP 文档</h1>
+curl -I https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html</p><p><h1>7. 重启 Gateway</h1>
+openclaw gateway restart
+</code></pre></p><p><h4>验证清单</h4></p><p><pre><code class="language-bash"><h1>✅ Agent 验证</h1>
+openclaw agents list
+<h1>期望输出：5 个 Agent</h1></p><p><h1>✅ 技能验证</h1>
+openclaw skills list
+<h1>期望输出：11+ 个技能</h1></p><p><h1>✅ 记忆验证</h1>
+ls ~/workspace/memory/
+<h1>期望输出：2026-03-11.md 等</h1></p><p><h1>✅ 文档验证</h1>
+curl -I https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html
+<h1>期望输出：HTTP/1.1 200 OK</h1></p><p><h1>✅ 定时任务验证</h1>
+crontab -l
+<h1>期望输出：包含每日备份任务</h1></p><p><h1>✅ HTTP 链接汇总验证</h1>
+curl https://yun.webyoung.cn/task-board/http-links-summary.html
+<h1>期望输出：包含所有文档链接</h1>
+</code></pre></p><p>---</p><p><h2>验证清单</h2></p><p><h3>恢复后必做检查</h3></p><p><li>[ ] <strong>Agent 配置</strong></li>
+  <pre><code class="language-bash">  openclaw agents list
+  # 检查：5 个 Agent 都在
+  </code></pre></p><p><li>[ ] <strong>技能配置</strong></li>
+  <pre><code class="language-bash">  openclaw skills list
+  # 检查：所有技能正常
+  </code></pre></p><p><li>[ ] <strong>记忆文件</strong></li>
+  <pre><code class="language-bash">  ls ~/workspace/memory/
+  cat ~/workspace/MEMORY.md
+  # 检查：记忆完整
+  </code></pre></p><p><li>[ ] <strong>HTTP 文档</strong></li>
+  <pre><code class="language-bash">  curl -I https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html
+  # 检查：返回 200 OK
+  </code></pre></p><p><li>[ ] <strong>定时任务</strong></li>
+  <pre><code class="language-bash">  crontab -l
+  # 检查：备份任务在
+  </code></pre></p><p><li>[ ] <strong>Gateway 状态</strong></li>
+  <pre><code class="language-bash">  openclaw gateway status
+  # 检查：正常运行
+  </code></pre></p><p>---</p><p><h2>常见问题</h2></p><p><h3>Q1: 恢复后 Agent 不显示？</h3></p><p><strong>A</strong>: 检查 agents 目录权限和 openclaw.json 配置
+<pre><code class="language-bash">ls -la ~/.openclaw/agents/
+cat ~/.openclaw/openclaw.json | grep -A10 '"agents"'
+</code></pre></p><p><h3>Q2: 恢复后 HTTP 文档 404？</h3></p><p><strong>A</strong>: 文件未复制到 fileserver 目录
+<pre><code class="language-bash"><h1>手动复制</h1>
+cp ~/workspace/task-board/*.html /home/admin/fileserver/files/task-board/
+chmod 644 /home/admin/fileserver/files/task-board/*.html
+</code></pre></p><p><h3>Q3: 跨机器恢复后 API Key 丢失？</h3></p><p><strong>A</strong>: API Key 存储在 auth-profiles.json，需要单独配置
+<pre><code class="language-bash"><h1>方式 1: 从备份恢复</h1>
+cp /path/to/backup/agents/main/agent/auth-profiles.json \
+   ~/.openclaw/agents/main/agent/auth-profiles.json</p><p><h1>方式 2: 重新配置</h1>
+openclaw agents add &lt;agent-id&gt;
+</code></pre></p><p><h3>Q4: 恢复后技能不工作？</h3></p><p><strong>A</strong>: 检查技能目录和依赖
+<pre><code class="language-bash"><h1>检查技能目录</h1>
+ls ~/workspace/skills/</p><p><h1>重新安装依赖</h1>
+cd ~/workspace/skills/&lt;skill-name&gt;/
+npm install
+</code></pre></p><p><h3>Q5: 如何只恢复特定 Agent？</h3></p><p><strong>A</strong>: 手动复制特定 Agent 目录
+<pre><code class="language-bash"><h1>只恢复小云评委</h1>
+cp -r /path/to/backup/agents/xiaoyun-judge \
+      ~/.openclaw/agents/xiaoyun-judge</p><p><h1>只恢复推书酱</h1>
+cp -r /path/to/backup/agents/xiaoyun-novel \
+      ~/.openclaw/agents/xiaoyun-novel
+</code></pre></p><p>---</p><p><h2>📊 备份恢复统计</h2></p><p>| 操作 | 时间 | 结果 |</p><p><table><thead><tr><th>完整备份</th><th>~30 秒</th><th>✅ 成功</th></tr></thead><tbody><tr><td>完整恢复</td><td>~60 秒</td><td>✅ 成功</td></tr><tr><td>跨机器恢复</td><td>~5 分钟</td><td>✅ 成功（含验证）</td></tr></tbody></table></p><p>---</p><p><h2>🔗 相关文档</h2></p><p><li><a href="/home/admin/.openclaw/workspace/person/xiaoyun/scripts/backup-xiaoyun.sh" target="_blank">备份脚本</a></li>
+<li><a href="/home/admin/.openclaw/workspace/person/xiaoyun/scripts/restore.sh" target="_blank">恢复脚本</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/http-links-summary.html" target="_blank">HTTP 链接汇总</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/AGENT-CONFIG.html" target="_blank">Agent 配置文档</a></li></p><p>---</p><p><strong>小云记录</strong>: 📝 让每个配置都有完整的备份，让每次恢复都快速可靠。</p><p>_最后更新：2026-03-11 18:50 | 小云记录 📝_
+
+        </div>
+        
+        <div class="footer">
+            <p>Generated by <strong>小云推书</strong> 📖 | 2026/3/11</p>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                运行环境：阿里云 iZ6weg099z8odxhxeq49hzZ
+            </p>
+        </div>
+    </div>
+    
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">✅ 已复制到剪贴板！</div>
+    
+    <script>
+        // 复制提示词功能
+        function copyPrompt(button) {
+            const prompt = decodeURIComponent(button.getAttribute('data-prompt'));
+            
+            navigator.clipboard.writeText(prompt).then(() => {
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                
+                // 更改按钮文字
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                
+                // 2 秒后恢复
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                // 降级方案：使用 textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                button.textContent = '✅ 已复制';
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = '📋 一键复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

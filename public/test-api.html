@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>API 测试</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .result { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>🧪 API 测试页面</h1>
+  <p>测试时间：<span id="time"></span></p>
+  
+  <h2>测试结果:</h2>
+  <div id="results"></div>
+  
+  <script>
+    document.getElementById('time').textContent = new Date().toLocaleString();
+    
+    async function testAPI() {
+      const results = document.getElementById('results');
+      
+      try {
+        // 测试 Agent API
+        results.innerHTML += '<div class="result">📡 测试 Agent API...</div>';
+        const agentsRes = await fetch('/task-board-api/api/agents/status');
+        const agentsData = await agentsRes.json();
+        
+        if (agentsData.success) {
+          results.innerHTML += `<div class="result success">✅ Agent API 成功<br>Agent 数量：${agentsData.data.length}</div>`;
+          agentsData.data.forEach(a => {
+            results.innerHTML += `<div class="result">• ${a.name} ${a.emoji}: ${a.currentTask || '无任务'} (${a.progress}%)</div>`;
+          });
+        } else {
+          results.innerHTML += `<div class="result error">❌ Agent API 失败：${JSON.stringify(agentsData)}</div>`;
+        }
+      } catch (e) {
+        results.innerHTML += `<div class="result error">❌ Agent API 错误：${e.message}</div>`;
+      }
+      
+      try {
+        // 测试 Tasks API
+        results.innerHTML += '<div class="result">📊 测试 Tasks API...</div>';
+        const tasksRes = await fetch('/task-board-api/api/tasks/stats');
+        const tasksData = await tasksRes.json();
+        
+        if (tasksData.success) {
+          results.innerHTML += `<div class="result success">✅ Tasks API 成功<br>总任务：${tasksData.data.total}, 完成：${tasksData.data.completed}</div>`;
+        } else {
+          results.innerHTML += `<div class="result error">❌ Tasks API 失败：${JSON.stringify(tasksData)}</div>`;
+        }
+      } catch (e) {
+        results.innerHTML += `<div class="result error">❌ Tasks API 错误：${e.message}</div>`;
+      }
+    }
+    
+    testAPI();
+  </script>
+</body>
+</html>

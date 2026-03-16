@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 需求任务公告板 - 已完成任务</title>
+    <link rel="stylesheet" href="/task-board/css/dashboard.css">
+    <style>
+        .task-list { list-style: none; padding: 0; }
+        .task-item {
+            background: white;
+            border-left: 4px solid #2ed573;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-title-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            flex: 1;
+        }
+        .task-title-link:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+        .task-id {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .task-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .meta-label {
+            font-weight: bold;
+        }
+        .completed-badge {
+            background: #2ed573;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .task-stats {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+        .back-link, .refresh-btn {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .back-link:hover, .refresh-btn:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ 已完成任务</h1>
+            <p>显示所有已完成的任务</p>
+            <div class="nav-links">
+                <a href="/task-board/" class="back-link">📋 返回总览</a>
+                <button class="refresh-btn" onclick="loadTasks()">🔄 刷新</button>
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">加载中...</div>
+        
+        <div id="content" style="display: none;">
+            <div class="task-stats">
+                <span class="stat-item">共 <strong id="task-count">0</strong> 个任务</span>
+                <span class="stat-item">最后更新：<strong id="last-update">--</strong></span>
+            </div>
+            
+            <ul class="task-list" id="task-list"></ul>
+        </div>
+    </div>
+    
+    <script>
+        const API_ALL = '/api/tasks';
+        
+        async function loadTasks() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('content').style.display = 'none';
+            
+            try {
+                const response = await fetch(API_ALL);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    const completed = result.data.filter(t => t.status === 'COMPLETED');
+                    console.log('[Completed] 已完成任务:', completed.length);
+                    renderTaskList(completed);
+                    updateStats(completed);
+                }
+            } catch (error) {
+                console.error('加载失败:', error);
+            }
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('last-update').textContent = new Date().toLocaleString('zh-CN');
+        }
+        
+        function renderTaskList(tasks) {
+            const taskList = document.getElementById('task-list');
+            const taskCount = document.getElementById('task-count');
+            
+            taskCount.textContent = tasks.length;
+            
+            if (tasks.length === 0) {
+                taskList.innerHTML = '<li class="empty-state"><h2>🎉 无已完成任务</h2><p>还没有任务完成！</p></li>';
+                return;
+            }
+            
+            taskList.innerHTML = tasks.map(task => `
+                <li class="task-item">
+                    <div class="task-header">
+                        <a href="/task-board/tasks/${task.id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
+                        <span class="completed-badge">✅ 已完成</span>
+                    </div>
+                    <div class="task-meta">
+                        <div class="meta-item"><span class="meta-label">执行者:</span> ${task.assignee || '未分配'}</div>
+                        <div class="meta-item"><span class="meta-label">完成时间:</span> ${new Date(task.updated_at).toLocaleString('zh-CN')}</div>
+                    </div>
+                </li>
+            `).join('');
+        }
+        
+        function updateStats(tasks) {
+            document.getElementById('task-count').textContent = tasks.length;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 页面加载时获取数据
+        loadTasks();
+        
+        // 每 60 秒自动刷新
+        setInterval(loadTasks, 60000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Agent 团队技能配置</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h1 { font-size: 26px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        h4 { font-size: 16px; }
+        
+        p {
+            margin: 15px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        /* AI 绘图提示词容器 */
+        .prompt-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .prompt-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .prompt-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .prompt-title {
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-content {
+            padding: 20px;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .prompt-header {
+                flex-wrap: wrap;
+            }
+            
+            .prompt-title {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+        }
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* 复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #48bb78;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .highlight h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+            border-bottom: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 🤖 Agent 团队技能配置</h1>
+            <p>小云推书 · 小说推文变现专家</p>
+        </div>
+        
+        <div class="content">
+            <h1>🤖 Agent 团队技能配置</h1></p><p><strong>版本</strong>: v1.0
+<strong>创建时间</strong>: 2026-03-11
+<strong>最后更新</strong>: 2026-03-11</p><p>---</p><p><h2>📋 Agent 团队总览</h2></p><p>| Agent | Emoji | 职责 | 状态 | 系统注册 |</p><p><table><thead><tr><th><strong>小云</strong></th><th>☁️</th><th>系统架构师 + 任务管理</th><th>✅ 完整</th><th>✅</th></tr></thead><tbody><tr><td><strong>小云评委</strong></td><td>⚖️</td><td>评审专家 + 冲突仲裁</td><td>✅ 完整</td><td>✅</td></tr><tr><td><strong>小云记录</strong></td><td>📝</td><td>文档专家 + 知识管理</td><td>✅ 完整</td><td>✅</td></tr><tr><td><strong>小云开发</strong></td><td>💻</td><td>全栈开发工程师</td><td>✅ 完整</td><td>✅</td></tr><tr><td><strong>推书酱</strong></td><td>📖</td><td>小说推文专家</td><td>✅ 完整</td><td>✅</td></tr></tbody></table></p><p>---</p><p><h2>🧠 小云（主 Agent）</h2></p><p><h3>基本信息</h3>
+<li><strong>Agent ID</strong>: <code>main</code></li>
+<li><strong>工作目录</strong>: <code>/home/admin/.openclaw/workspace</code></li>
+<li><strong>模型</strong>: alibaba-cloud/qwen3.5-plus</li></p><p><h3>核心技能</h3>
+<pre><code class="language-json">{
+  "system_design": {
+    "level": "expert",
+    "experience": 100,
+    "success_rate": 0.98
+  },
+  "task_management": {
+    "level": "expert",
+    "experience": 100,
+    "success_rate": 0.95
+  },
+  "coordination": {
+    "level": "expert",
+    "experience": 100,
+    "success_rate": 0.97
+  }
+}
+</code></pre></p><p><h3>职责</h3>
+<li>需求分析</li>
+<li>任务拆解</li>
+<li>Agent 指派</li>
+<li>系统协调</li>
+<li><strong>任务验收</strong> ⭐</li></p><p><h3>最大并发: 5</h3></p><p>---</p><p><h2>⚖️ 小云评委</h2></p><p><h3>基本信息</h3>
+<li><strong>Agent ID</strong>: <code>xiaoyun-judge</code></li>
+<li><strong>工作目录</strong>: <code>/home/admin/.openclaw/workspace/agents/xiaoyun-judge</code></li>
+<li><strong>模型</strong>: alibaba-cloud/qwen3.5-plus</li></p><p><h3>核心技能</h3>
+<pre><code class="language-json">{
+  "technical_review": {
+    "level": "expert",
+    "experience": 50,
+    "success_rate": 0.95
+  },
+  "risk_assessment": {
+    "level": "advanced",
+    "experience": 30,
+    "success_rate": 0.90
+  },
+  "conflict_resolution": {
+    "level": "advanced",
+    "experience": 20,
+    "success_rate": 0.85
+  }
+}
+</code></pre></p><p><h3>职责</h3>
+<li>任务方案评审</li>
+<li>技术可行性评估</li>
+<li>风险评估</li>
+<li>Agent 指派评估</li>
+<li>冲突仲裁（与小云辩论）</li></p><p><h3>最大并发: 3</h3></p><p>---</p><p><h2>📝 小云记录</h2></p><p><h3>基本信息</h3>
+<li><strong>Agent ID</strong>: <code>xiaoyun-recorder</code></li>
+<li><strong>工作目录</strong>: <code>/home/admin/.openclaw/workspace/agents/xiaoyun-recorder</code></li>
+<li><strong>模型</strong>: alibaba-cloud/qwen3.5-plus</li></p><p><h3>核心技能</h3>
+<pre><code class="language-json">{
+  "documentation": {
+    "level": "expert",
+    "experience": 80,
+    "success_rate": 0.98
+  },
+  "knowledge_management": {
+    "level": "advanced",
+    "experience": 50,
+    "success_rate": 0.95
+  },
+  "archive_management": {
+    "level": "advanced",
+    "experience": 40,
+    "success_rate": 0.96
+  }
+}
+</code></pre></p><p><h3>职责</h3>
+<li>会议纪要记录</li>
+<li>项目日报（每日 23:30）</li>
+<li>经验沉淀</li>
+<li>项目规范制定</li>
+<li>档案归档管理</li>
+<li>审批记录</li>
+<li>Agent 能力评估</li></p><p><h3>最大并发: 10</h3></p><p>---</p><p><h2>💻 小云开发</h2></p><p><h3>基本信息</h3>
+<li><strong>Agent ID</strong>: <code>xiaoyun-dev</code></li>
+<li><strong>工作目录</strong>: <code>/home/admin/.openclaw/workspace/agents/xiaoyun-dev</code></li>
+<li><strong>模型</strong>: alibaba-cloud/qwen3.5-plus</li></p><p><h3>核心技能</h3>
+<pre><code class="language-json">{
+  "nodejs": {
+    "level": "expert",
+    "experience": 100,
+    "success_rate": 0.95
+  },
+  "web_development": {
+    "level": "advanced",
+    "experience": 80,
+    "success_rate": 0.92
+  },
+  "database": {
+    "level": "advanced",
+    "experience": 60,
+    "success_rate": 0.90
+  },
+  "code_review": {
+    "level": "advanced",
+    "experience": 50,
+    "success_rate": 0.93
+  }
+}
+</code></pre></p><p><h3>职责</h3>
+<li>功能开发</li>
+<li>Bug 修复</li>
+<li>代码审查</li>
+<li>技术文档编写</li></p><p><h3>最大并发: 3</h3></p><p>---</p><p><h2>📖 推书酱（小云推书）</h2></p><p><h3>基本信息</h3>
+<li><strong>Agent ID</strong>: <code>xiaoyun-novel</code></li>
+<li><strong>工作目录</strong>: <code>/home/admin/.openclaw/workspace/agents/xiaoyun-novel</code></li>
+<li><strong>模型</strong>: alibaba-cloud/qwen3.5-plus</li></p><p><h3>核心技能</h3>
+<pre><code class="language-json">{
+  "novel_analysis": {
+    "level": "expert",
+    "experience": 15,
+    "success_rate": 0.95
+  },
+  "ai_drawing": {
+    "level": "advanced",
+    "experience": 8,
+    "success_rate": 0.88
+  },
+  "video_production": {
+    "level": "intermediate",
+    "experience": 5,
+    "success_rate": 0.85
+  },
+  "content_creation": {
+    "level": "advanced",
+    "experience": 10,
+    "success_rate": 0.90
+  }
+}
+</code></pre></p><p><h3>职责</h3>
+<li>小说分析</li>
+<li>AI 绘图提示词生成</li>
+<li>视频脚本编写</li>
+<li>发布策略建议</li>
+<li>数据追踪分析</li></p><p><h3>最大并发: 2</h3></p><p>---</p><p><h2>📊 Agent 能力评估矩阵</h2></p><p>| 技能领域 | 小云 | 小云评委 | 小云记录 | 小云开发 | 推书酱 |</p><p><table><thead><tr><th>系统设计</th><th>⭐⭐⭐⭐⭐</th><th>⭐⭐⭐⭐</th><th>⭐⭐⭐</th><th>⭐⭐⭐⭐</th><th>⭐⭐</th></tr></thead><tbody><tr><td>任务管理</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐</td></tr><tr><td>技术评审</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr><tr><td>文档编写</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td></tr><tr><td>代码开发</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐</td></tr><tr><td>内容创作</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr></tbody></table></p><p>---</p><p><h2>🔄 任务分配规则</h2></p><p><h3>智能指派算法</h3>
+<pre><code class="language-yaml">指派维度:
+  技能匹配度 (40%)
+    - Agent 技能标签与任务需求匹配度
+    - 历史同类任务成功率
+    
+  工作负载 (30%)
+    - 当前进行中任务数量
+    - 预计可用时间
+    
+  专业领域 (20%)
+    - 任务所属领域
+    - Agent 专长领域
+    
+  学习价值 (10%)
+    - 任务对 Agent 技能提升价值
+    - 是否需要新技能学习</p><p>指派规则:
+  - 总分 &gt; 80 分：强烈推荐
+  - 总分 60-80 分：可以指派
+  - 总分 &lt; 60 分：不建议指派
+</code></pre></p><p>---</p><p><h2>📈 学习进化机制</h2></p><p><h3>技能提升路径</h3>
+<pre><code class="language-">执行任务
+    ↓
+记录经验（成功/失败）
+    ↓
+更新技能档案
+    ↓
+识别技能短板
+    ↓
+制定学习计划
+    ↓
+空闲时间学习（摸鱼时间）
+    ↓
+技能升级
+    ↓
+可承接更高级任务
+</code></pre></p><p><h3>评估周期</h3>
+<li><strong>每日</strong>: 小云记录项目日报</li>
+<li><strong>每周</strong>: 小云记录评估 Agent 能力</li>
+<li><strong>每月</strong>: 归档整理 + 规范提炼</li></p><p>---</p><p><h2>📁 相关文档</h2></p><p><li><a href="https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html" target="_blank">系统设计文档</a></li>
+<li><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-judge/README.md" target="_blank">小云评委评审清单</a></li>
+<li><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/README.md" target="_blank">小云记录文档模板</a></li>
+<li><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-dev/README.md" target="_blank">小云开发规范</a></li>
+<li><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-novel/SPECIFICATIONS.md" target="_blank">推书酱工作规范</a></li></p><p>---</p><p>_让每个 Agent 都在合适的位置发挥最大价值。_</p><p><strong>最后更新</strong>: 2026-03-11 | 小云 ☁️
+
+        </div>
+        
+        <div class="footer">
+            <p>Generated by <strong>小云推书</strong> 📖 | 2026/3/11</p>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                运行环境：阿里云 iZ6weg099z8odxhxeq49hzZ
+            </p>
+        </div>
+    </div>
+    
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">✅ 已复制到剪贴板！</div>
+    
+    <script>
+        // 复制提示词功能
+        function copyPrompt(button) {
+            const prompt = decodeURIComponent(button.getAttribute('data-prompt'));
+            
+            navigator.clipboard.writeText(prompt).then(() => {
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                
+                // 更改按钮文字
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                
+                // 2 秒后恢复
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                // 降级方案：使用 textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                button.textContent = '✅ 已复制';
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = '📋 一键复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

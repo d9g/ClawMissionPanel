@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP 服务架构文档 - 整理完成报告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h1 { font-size: 26px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        h4 { font-size: 16px; }
+        
+        p {
+            margin: 15px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        /* AI 绘图提示词容器 */
+        .prompt-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .prompt-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .prompt-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .prompt-title {
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-content {
+            padding: 20px;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .prompt-header {
+                flex-wrap: wrap;
+            }
+            
+            .prompt-title {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+        }
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* 复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #48bb78;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .highlight h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+            border-bottom: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 HTTP 服务架构文档 - 整理完成报告</h1>
+            <p>小云推书 · 小说推文变现专家</p>
+        </div>
+        
+        <div class="content">
+            <h1>HTTP 服务架构文档 - 整理完成报告</h1></p><p><strong>报告时间</strong>: 2026-03-11 21:40
+<strong>整理人</strong>: 小云写作 ✍️
+<strong>审核人</strong>: 小云评委 ⚖️</p><p>---</p><p><h2>📋 任务概述</h2></p><p>用户要求：
+<li>整理 HTTP 服务架构文档</li>
+<li>确保备份恢复脚本包含 HTTP 服务相关配置</li>
+<li>文档将上传到 <code>person</code> 私有项目备份</li></p><p>---</p><p><h2>✅ 完成内容</h2></p><p><h3>1. HTTP 服务架构文档</h3></p><p><strong>文档位置</strong>: 
+<li>MD: <code>/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/http-service-architecture.md</code></li>
+<li>HTML: <code>https://yun.webyoung.cn/task-board/http-service-architecture.html</code></li></p><p><strong>文档内容</strong>:
+<li>✅ 整体架构图</li>
+<li>✅ 目录结构详解</li>
+<li>✅ 服务配置（Nginx、Systemd）</li>
+<li>✅ 访问路径说明</li>
+<li>✅ 服务管理命令</li>
+<li>✅ 备份策略</li>
+<li>✅ 安全考虑</li>
+<li>✅ 监控建议</li>
+<li>✅ 维护指南</li></p><p><h3>2. 备份脚本更新 (v7.0)</h3></p><p><strong>脚本位置</strong>: <code>/home/admin/.openclaw/workspace/person/xiaoyun/scripts/backup-xiaoyun.sh</code></p><p><strong>新增备份内容</strong>:
+| 类别 | 路径 | 说明 |</p><p><table><thead><tr><th><strong>任务公告板</strong></th><th><code>workspace/task-board/</code></th><th>完整备份（代码、数据库、文档）</th></tr></thead><tbody><tr><td><strong>文件服务器</strong></td><td><code>fileserver/</code></td><td>关键配置文件（排除大文件）</td></tr><tr><td><strong>Nginx 配置</strong></td><td><code>http-services/nginx/</code></td><td>fileserver.conf</td></tr><tr><td><strong>Systemd 服务</strong></td><td><code>http-services/systemd/</code></td><td>task-board.service, xiaoyun-fileserver.service</td></tr></tbody></table></p><p><strong>备份结构</strong>:
+<pre><code class="language-">backup-YYYYMMDD-HHMMSS/
+├── http-services/
+│   ├── task-board/          # 任务公告板完整备份
+│   ├── fileserver/          # 文件服务器配置
+│   ├── nginx/               # Nginx 配置
+│   └── systemd/             # Systemd 服务配置
+├── workspace/
+│   ├── task-board/          # (也会在这里备份)
+│   └── ...
+└── ...
+</code></pre></p><p><h3>3. 恢复脚本更新</h3></p><p><strong>新增恢复步骤</strong>:
+<li>✅ 任务公告板恢复</li>
+<li>✅ 文件服务器配置恢复</li>
+<li>⚠️ Nginx 配置恢复（需 sudo，提供手动命令）</li>
+<li>⚠️ Systemd 服务恢复（需 sudo，提供手动命令）</li></p><p><strong>恢复命令</strong>（备份后自动提示）:
+<pre><code class="language-bash"><h1>Nginx 配置</h1>
+sudo cp $BACKUP_PATH/http-services/nginx/fileserver.conf /etc/nginx/conf.d/</p><p><h1>Systemd 服务</h1>
+sudo cp $BACKUP_PATH/http-services/systemd/*.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl restart nginx</p><p><h1>HTTP 服务</h1>
+sudo systemctl restart task-board
+sudo systemctl restart xiaoyun-fileserver
+</code></pre></p><p><h3>4. 文档发布</h3></p><p>| 文档 | HTTP 链接 | 状态 |</p><p><table><thead><tr><th><strong>HTTP 服务架构</strong></th><th><a href="https://yun.webyoung.cn/task-board/http-service-architecture.html" target="_blank">HTML</a></th><th>✅</th></tr></thead><tbody><tr><td><strong>HTTP 链接汇总</strong></td><td><a href="https://yun.webyoung.cn/task-board/http-links-summary.html" target="_blank">HTML</a></td><td>✅</td></tr><tr><td><strong>部署说明</strong></td><td><a href="https://yun.webyoung.cn/task-board/task-board-deployment.html" target="_blank">HTML</a></td><td>✅</td></tr></tbody></table></p><p>---</p><p><h2>📊 备份验证</h2></p><p><h3>最新备份</h3>
+<li><strong>备份日期</strong>: 2026-03-11-213822</li>
+<li><strong>备份大小</strong>: 43M</li>
+<li><strong>文件数量</strong>: 2599</li>
+<li><strong>HTTP 服务</strong>: ✅ 已包含</li></p><p><h3>验证检查</h3>
+<pre><code class="language-bash"><h1>检查 HTTP 服务备份</h1>
+ls -la /home/admin/.openclaw/workspace/person/xiaoyun/backups/xiaoyun/20260311-213822/http-services/</p><p><h1>预期输出:</h1>
+<h1>task-board/    # 任务公告板</h1>
+<h1>fileserver/    # 文件服务器</h1>
+<h1>nginx/         # Nginx 配置</h1>
+<h1>systemd/       # Systemd 服务</h1>
+</code></pre></p><p>---</p><p><h2>🎯 关键改进</h2></p><p><h3>v6.0 → v7.0 变化</h3>
+| 版本 | 特性 | HTTP 服务 |</p><p><table><thead><tr><th>v6.0</th><th>通用版</th><th>❌ 无专门备份</th></tr></thead><tbody><tr><td>v7.0</td><td>含 HTTP 服务</td><td>✅ 完整备份</td></tr></tbody></table></p><p><h3>备份覆盖</h3>
+<li>✅ <strong>代码</strong>: 任务公告板、文件服务器完整代码</li>
+<li>✅ <strong>数据库</strong>: SQLite 数据库完整备份</li>
+<li>✅ <strong>配置</strong>: Nginx、Systemd 配置</li>
+<li>✅ <strong>文档</strong>: 所有架构文档、部署文档</li>
+<li>✅ <strong>依赖</strong>: package.json、requirements.txt</li></p><p><h3>恢复流程</h3>
+<li>✅ <strong>自动恢复</strong>: 代码、数据库、文档</li>
+<li>⚠️ <strong>手动恢复</strong>: Nginx、Systemd（需 sudo）</li>
+<li>✅ <strong>完整提示</strong>: 恢复后自动显示后续步骤</li></p><p>---</p><p><h2>📝 小云评委审核</h2></p><p><h3>审核意见</h3>
+<strong>✅ 通过</strong></p><p><strong>优点</strong>:
+<li>文档结构清晰，包含完整架构图</li>
+<li>备份策略详细，覆盖所有关键组件</li>
+<li>恢复流程明确，区分自动/手动步骤</li>
+<li>安全考虑周全（权限、SSL、日志）</li></p><p><strong>建议</strong>:
+<li>✅ 已实现：Nginx/Systemd 恢复需 sudo，提供手动命令</li>
+<li>✅ 已实现：备份验证清单</li>
+<li>后续可添加：自动化测试脚本</li></p><p>---</p><p><h2>🔗 相关文档</h2></p><p><li><a href="https://yun.webyoung.cn/task-board/http-service-architecture.html" target="_blank">HTTP 服务架构</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/task-board-deployment.html" target="_blank">部署说明</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/backup-restore-guide.html" target="_blank">备份恢复指南</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/http-links-summary.html" target="_blank">HTTP 链接汇总</a></li></p><p>---</p><p><h2>📦 下一步</h2></p><p><h3>立即执行</h3>
+<li>✅ 文档整理完成</li>
+<li>✅ 备份脚本更新</li>
+<li>✅ 文档发布完成</li>
+<li>⬜️ 提交到 person 私有项目</li></p><p><h3>提交命令</h3>
+<pre><code class="language-bash">cd /home/admin/.openclaw/workspace/person/xiaoyun/scripts
+./backup-xiaoyun-commit.sh
+</code></pre></p><p>---</p><p><strong>小云写作</strong>: ✍️ HTTP 服务架构文档整理完成，备份恢复脚本已更新到 v7.0，包含完整的 HTTP 服务备份恢复支持！</p><p>_报告时间：2026-03-11 21:40 | 小云写作 ✍️ | 小云评委 ⚖️_
+
+        </div>
+        
+        <div class="footer">
+            <p>Generated by <strong>小云推书</strong> 📖 | 2026/3/11</p>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                运行环境：阿里云 iZ6weg099z8odxhxeq49hzZ
+            </p>
+        </div>
+    </div>
+    
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">✅ 已复制到剪贴板！</div>
+    
+    <script>
+        // 复制提示词功能
+        function copyPrompt(button) {
+            const prompt = decodeURIComponent(button.getAttribute('data-prompt'));
+            
+            navigator.clipboard.writeText(prompt).then(() => {
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                
+                // 更改按钮文字
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                
+                // 2 秒后恢复
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                // 降级方案：使用 textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                button.textContent = '✅ 已复制';
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = '📋 一键复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

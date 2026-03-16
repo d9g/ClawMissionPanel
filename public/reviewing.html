@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 评审任务 - OpenMOSS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header h1 { color: #667eea; margin-bottom: 10px; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-number { font-size: 32px; font-weight: bold; }
+        .stat-label { font-size: 14px; opacity: 0.9; margin-top: 5px; }
+        .content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .review-list { list-style: none; }
+        .review-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #17a2b8;
+            background: #f8f9fa;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-id { font-weight: 600; color: #667eea; }
+        .score-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .score-5 { background: #28a745; color: white; }
+        .score-4 { background: #17a2b8; color: white; }
+        .score-3 { background: #ffc107; color: #333; }
+        .score-2 { background: #fd7e14; color: white; }
+        .score-1 { background: #dc3545; color: white; }
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 评审任务</h1>
+            <p>查看所有评审记录和待评审任务</p>
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-reviews">-</div>
+                    <div class="stat-label">总评审数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pending-reviews">-</div>
+                    <div class="stat-label">待评审</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avg-score">-</div>
+                    <div class="stat-label">平均分</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="review-list-container">
+                <div class="loading">
+                    <p>正在加载评审数据...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_DASHBOARD_DATA = '/task-board/api/dashboard/data';
+        
+        async function loadReviews() {
+            const container = document.getElementById('review-list-container');
+            
+            try {
+                const response = await fetch(API_DASHBOARD_DATA + '?t=' + Date.now());
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 数据格式：data.data.activity_logs
+                    const activityLogs = data.data?.activity_logs || data.activity_logs || [];
+                    const reviews = activityLogs.filter(log => log.action === 'review' || log.action === 'claim' || log.action === 'complete');
+                    
+                    renderReviewList(reviews);
+                    updateStats(reviews);
+                }
+            } catch (error) {
+                console.error('加载失败:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>❌ 加载失败</h3>
+                        <p>请确保 API 服务已启动</p>
+                        <button onclick="loadReviews()" style="margin-top:15px;padding:10px 20px;background:#667eea;color:white;border:none;border-radius:8px;cursor:pointer;">重试</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderReviewList(reviews) {
+            const container = document.getElementById('review-list-container');
+            
+            if (reviews.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>📭 暂无评审记录</h3>
+                        <p>评审活动将显示在这里</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const html = `
+                <ul class="review-list">
+                    ${reviews.map(review => `
+                        <li class="review-item">
+                            <div class="review-header">
+                                <span class="task-id">📋 ${review.task_id || 'N/A'}</span>
+                                <span class="score-badge">${review.action}</span>
+                            </div>
+                            <div><strong>Agent:</strong> ${review.agent_id}</div>
+                            <div><strong>时间:</strong> ${review.created_at}</div>
+                            ${review.details ? `<div><strong>详情:</strong> ${review.details}</div>` : ''}
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function updateStats(reviews) {
+            document.getElementById('total-reviews').textContent = reviews.length;
+            document.getElementById('pending-reviews').textContent = '0';
+            document.getElementById('avg-score').textContent = 'N/A';
+        }
+        
+        // 页面加载时加载数据
+        loadReviews();
+    </script>
+</body>
+</html>

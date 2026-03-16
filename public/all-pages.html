@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 任务公共版 - 所有页面导航</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .link-item {
+            display: block;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+        .link-item:hover {
+            transform: translateY(-3px);
+        }
+        .link-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .link-desc {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .link-item.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .link-item.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .link-item.warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-card">
+            <h1>📚 任务公共版 - 所有页面导航</h1>
+            <p class="subtitle">ClawMissionPanel 完整页面列表 | 最后更新：2026-03-14</p>
+        </div>
+        
+        <!-- 核心页面 -->
+        <div class="nav-card">
+            <div class="section">
+                <h2>🎯 核心页面</h2>
+                <div class="link-grid">
+                    <a href="/task-board/" class="link-item">
+                        <div class="link-title">📋 任务总览</div>
+                        <div class="link-desc">查看所有任务的 Kanban 看板</div>
+                    </a>
+                    <a href="/task-board/team-work-report.html" class="link-item success">
+                        <div class="link-title">📊 团队工作情况验证报告</div>
+                        <div class="link-desc">各 Agent 工作情况和任务进度验证</div>
+                    </a>
+                    <a href="/task-board/agents-status.html" class="link-item success">
+                        <div class="link-title">🤖 Agent 实时状态</div>
+                        <div class="link-desc">监控各 Agent 的工作状态和任务进度</div>
+                    </a>
+                    <a href="/task-board/reviewing.html" class="link-item warning">
+                        <div class="link-title">📝 评审任务</div>
+                        <div class="link-desc">查看待评审的需求和方案</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 任务分类页面 -->
+        <div class="nav-card">
+            <div class="section">
+                <h2>📋 任务分类视图</h2>
+                <div class="link-grid">
+                    <a href="/task-board/pending.html" class="link-item secondary">
+                        <div class="link-title">⏸️ 待处理任务</div>
+                        <div class="link-desc">PENDING 状态的任务列表</div>
+                    </a>
+                    <a href="/task-board/progress.html" class="link-item">
+                        <div class="link-title">🟡 进行中任务</div>
+                        <div class="link-desc">IN_PROGRESS 状态的任务列表</div>
+                    </a>
+                    <a href="/task-board/blocked.html" class="link-item warning">
+                        <div class="link-title">🔴 阻塞任务</div>
+                        <div class="link-desc">BLOCKED 状态的任务列表</div>
+                    </a>
+                    <a href="/task-board/completed.html" class="link-item success">
+                        <div class="link-title">✅ 已完成任务</div>
+                        <div class="link-desc">COMPLETED 状态的任务列表</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 文档中心 -->
+        <div class="nav-card">
+            <div class="section">
+                <h2>📚 文档中心</h2>
+                <div class="link-grid">
+                    <a href="/task-board/docs/" class="link-item">
+                        <div class="link-title">📖 文档首页</div>
+                        <div class="link-desc">所有产品和技术文档</div>
+                    </a>
+                    <a href="/docs/PRD-TEAM-CREATOR-001.md" class="link-item">
+                        <div class="link-title">📋 Agent 团队创建器需求</div>
+                        <div class="link-desc">产品需求文档 <span class="badge">NEW</span></div>
+                    </a>
+                    <a href="/docs/TEAM-CREATOR-DESIGN.md" class="link-item">
+                        <div class="link-title">🎨 Agent 团队创建器设计</div>
+                        <div class="link-desc">技术设计方案 <span class="badge">NEW</span></div>
+                    </a>
+                    <a href="/docs/TEAM-MANAGEMENT-SPEC.md" class="link-item">
+                        <div class="link-title">🦞 团队协作管理规范</div>
+                        <div class="link-desc">多 Agent 协作流程规范</div>
+                    </a>
+                    <a href="/docs/DEVELOPMENT-PRINCIPLES.md" class="link-item">
+                        <div class="link-title">💡 开发原则</div>
+                        <div class="link-desc">18 条开发原则和最佳实践</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 历史报告 -->
+        <div class="nav-card">
+            <div class="section">
+                <h2>📜 历史报告</h2>
+                <div class="link-grid">
+                    <a href="/task-board/AGENT-CONFIG.html" class="link-item secondary">
+                        <div class="link-title">⚙️ Agent 配置报告</div>
+                        <div class="link-desc">Agent 配置详情</div>
+                    </a>
+                    <a href="/task-board/SYSTEM-DESIGN.html" class="link-item">
+                        <div class="link-title">🏗️ 系统设计文档</div>
+                        <div class="link-desc">完整系统架构设计</div>
+                    </a>
+                    <a href="/task-board/http-service-architecture.html" class="link-item">
+                        <div class="link-title">🌐 HTTP 服务架构</div>
+                        <div class="link-desc">HTTP 服务实现方案</div>
+                    </a>
+                    <a href="/task-board/product-index.html" class="link-item success">
+                        <div class="link-title">📊 产品索引</div>
+                        <div class="link-desc">产品功能和特性索引</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- API 接口 -->
+        <div class="nav-card">
+            <div class="section">
+                <h2>🔌 API 接口</h2>
+                <div class="link-grid">
+                    <a href="/api/agents/status" class="link-item">
+                        <div class="link-title">🤖 Agent 状态 API</div>
+                        <div class="link-desc">GET /api/agents/status</div>
+                    </a>
+                    <a href="/api/tasks/stats" class="link-item">
+                        <div class="link-title">📊 任务统计 API</div>
+                        <div class="link-desc">GET /api/tasks/stats</div>
+                    </a>
+                    <a href="/api/reviews" class="link-item">
+                        <div class="link-title">📝 评审任务 API</div>
+                        <div class="link-desc">GET /api/reviews <span class="badge">NEW</span></div>
+                    </a>
+                    <a href="/api/reviews/pending" class="link-item">
+                        <div class="link-title">⏳ 待评审 API</div>
+                        <div class="link-desc">GET /api/reviews/pending <span class="badge">NEW</span></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 统计信息 -->
+        <div class="nav-card">
+            <div class="section">
+                <h2>📈 页面统计</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 32px; font-weight: bold; color: #667eea;">20+</div>
+                        <div style="color: #666; margin-top: 5px;">HTML 页面</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 32px; font-weight: bold; color: #2ed573;">55+</div>
+                        <div style="color: #666; margin-top: 5px;">文档文件</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 32px; font-weight: bold; color: #ffa502;">10+</div>
+                        <div style="color: #666; margin-top: 5px;">API 接口</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 32px; font-weight: bold; color: #764ba2;">5</div>
+                        <div style="color: #666; margin-top: 5px;">Agent</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

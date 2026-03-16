@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 小云记录 - HTTP 服务可访问链接汇总</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h1 { font-size: 26px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        h4 { font-size: 16px; }
+        
+        p {
+            margin: 15px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        /* AI 绘图提示词容器 */
+        .prompt-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .prompt-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .prompt-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .prompt-title {
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-content {
+            padding: 20px;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .prompt-header {
+                flex-wrap: wrap;
+            }
+            
+            .prompt-title {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+        }
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* 复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #48bb78;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .highlight h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+            border-bottom: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 📝 小云记录 - HTTP 服务可访问链接汇总</h1>
+            <p>小云推书 · 小说推文变现专家</p>
+        </div>
+        
+        <div class="content">
+            <h1>📝 小云记录 - HTTP 服务可访问链接汇总</h1></p><p><strong>负责人</strong>: 小云记录 📝
+<strong>最后更新</strong>: 2026-03-11 18:35
+<strong>存储位置</strong>: <code>/home/admin/fileserver/files/</code></p><p>---</p><p><h2>📋 链接汇总</h2></p><p><h3>任务管理系统文档</h3></p><p>| 文档名称 | HTTP 链接 | MD 源文件 | 创建时间 | 状态 |</p><p><table><thead><tr><th><strong>📚 产品文档索引</strong></th><th><a href="https://yun.webyoung.cn/task-board/product-index.html" target="_blank">HTML</a></th><th><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/product-index.md" target="_blank">MD</a></th><th>2026-03-11 21:45</th><th>✅ 已发布</th></tr></thead><tbody><tr><td><strong>系统设计文档 v3.0</strong></td><td><a href="https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/task-board/SYSTEM-DESIGN.md" target="_blank">MD</a></td><td>2026-03-11 17:51</td><td>✅ 已发布</td></tr><tr><td><strong>Agent 配置文档 v1.0</strong></td><td><a href="https://yun.webyoung.cn/task-board/AGENT-CONFIG.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/task-board/AGENT-CONFIG.md" target="_blank">MD</a></td><td>2026-03-11 18:17</td><td>✅ 已发布</td></tr><tr><td><strong>小云评委职责定位</strong></td><td><a href="https://yun.webyoung.cn/task-board/note-judge-role-definition.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/note-judge-role-definition.md" target="_blank">MD</a></td><td>2026-03-11 18:45</td><td>✅ 已发布</td></tr><tr><td><strong>设计评审会议纪要</strong></td><td><a href="https://yun.webyoung.cn/task-board/20260311-design-review-meeting.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/20260311-design-review-meeting.md" target="_blank">MD</a></td><td>2026-03-11 18:40</td><td>✅ 已发布</td></tr><tr><td><strong>问题复盘 -404</strong></td><td><a href="https://yun.webyoung.cn/task-board/issue-20260311-001-http-404.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/issue-20260311-001-http-404.md" target="_blank">MD</a></td><td>2026-03-11 18:40</td><td>✅ 已发布</td></tr><tr><td><strong>备份恢复指南</strong></td><td><a href="https://yun.webyoung.cn/task-board/backup-restore-guide.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/backup-restore-guide.md" target="_blank">MD</a></td><td>2026-03-11 18:50</td><td>✅ 已发布</td></tr><tr><td><strong>任务公告板</strong></td><td><a href="https://yun.webyoung.cn/task-board/" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/task-board/public/index.html" target="_blank">MD</a></td><td>2026-03-11 21:30</td><td>✅ 已部署</td></tr><tr><td><strong>部署说明</strong></td><td><a href="https://yun.webyoung.cn/task-board/task-board-deployment.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/task-board-deployment.md" target="_blank">MD</a></td><td>2026-03-11 21:30</td><td>✅ 已发布</td></tr><tr><td><strong>HTTP 服务架构</strong></td><td><a href="https://yun.webyoung.cn/task-board/http-service-architecture.html" target="_blank">HTML</a></td><td><a href="/home/admin/.openclaw/workspace/agents/xiaoyun-recorder/docs/202603/http-service-architecture.md" target="_blank">MD</a></td><td>2026-03-11 21:35</td><td>✅ 已发布</td></tr></tbody></table></p><p>---</p><p><h3>小说推文文档</h3></p><p>| 文档名称 | HTTP 链接 | MD 源文件 | 创建时间 | 状态 |</p><p><table><thead><tr><th><strong>推文方案 - 恋综</strong></th><th><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-plan-full.html" target="_blank">HTML</a></th><th><a href="/home/admin/fileserver/files/20260311/novel-J9kAbJz3wIk-plan-full.md" target="_blank">MD</a></th><th>2026-03-11 14:17</th><th>✅ 已发布</th></tr></thead><tbody><tr><td><strong>视频制作指南</strong></td><td><a href="https://yun.webyoung.cn/20260311/novel-J9kAbJz3wIk-video-guide.html" target="_blank">HTML</a></td><td><a href="/home/admin/fileserver/files/20260311/novel-J9kAbJz3wIk-video-guide.md" target="_blank">MD</a></td><td>2026-03-11 16:29</td><td>✅ 已发布</td></tr><tr><td><strong>项目完整指南</strong></td><td><a href="https://yun.webyoung.cn/20260311/novel-guide-complete.html" target="_blank">HTML</a></td><td><a href="/home/admin/fileserver/files/20260311/novel-guide-complete.md" target="_blank">MD</a></td><td>2026-03-11 14:10</td><td>✅ 已发布</td></tr></tbody></table></p><p>---</p><p><h2>📁 文件存储结构</h2></p><p><pre><code class="language-">/home/admin/fileserver/files/
+├── task-board/                    # 任务管理系统
+│   ├── SYSTEM-DESIGN.html        # 系统设计文档
+│   └── AGENT-CONFIG.html         # Agent 配置文档
+└── 20260311/                      # 日期目录（小说推文）
+    ├── novel-J9kAbJz3wIk-plan-full.html
+    ├── novel-J9kAbJz3wIk-video-guide.html
+    └── novel-guide-complete.html
+</code></pre></p><p>---</p><p><h2>📊 统计信息</h2></p><p>| 分类 | 文档数量 | 最新更新时间 |</p><p><table><thead><tr><th>任务管理系统</th><th>10</th><th>2026-03-11 21:45</th></tr></thead><tbody><tr><td>小说推文</td><td>3</td><td>2026-03-11 16:29</td></tr><tr><td><strong>总计</strong></td><td><strong>13</strong></td><td>2026-03-11 21:45</td></tr></tbody></table></p><p>---</p><p><h2>🔧 发布流程</h2></p><p><h3>HTML 文档发布流程</h3>
+<pre><code class="language-">1. Markdown 文档创建/更新
+   ↓
+<li>运行 md-to-html.js 转换</li>
+   ↓
+<li>复制到 fileserver 目录</li>
+   ↓
+<li>设置权限 644</li>
+   ↓
+<li>小云记录更新链接汇总</li>
+   ↓
+<li>归档存储</li>
+</code></pre></p><p><h3>命令示例</h3>
+<pre><code class="language-bash"><h1>转换 Markdown 为 HTML</h1>
+node scripts/md-to-html.js /path/to/document.md</p><p><h1>复制到 fileserver</h1>
+cp /path/to/document.html /home/admin/fileserver/files/task-board/</p><p><h1>设置权限</h1>
+chmod 644 /home/admin/fileserver/files/task-board/document.html</p><p><h1>验证访问</h1>
+curl -I https://yun.webyoung.cn/task-board/document.html
+</code></pre></p><p>---</p><p><h2>⚠️ 注意事项</h2></p><p><h3>文件命名规范</h3>
+<li>✅ 只用英文、数字、连字符（-）</li>
+<li>❌ 禁止汉字、空格、特殊字符</li>
+<li>✅ 保持小写</li></p><p><h3>目录组织</h3>
+<li><strong>按功能分类</strong>: <code>task-board/</code>, <code>novel/</code></li>
+<li><strong>按日期分类</strong>: <code>20260311/</code>, <code>20260312/</code></li></p><p><h3>权限设置</h3>
+<li><strong>文件</strong>: 644 (rw-r--r--)</li>
+<li><strong>目录</strong>: 755 (rwxr-xr-x)</li></p><p>---</p><p><h2>📝 更新日志</h2></p><p>| 时间 | 操作 | 操作人 | 说明 |</p><p><table><thead><tr><th>2026-03-11 18:45</th><th>添加小云评委职责定位</th><th>小云记录</th><th>用户明确职责定位</th></tr></thead><tbody><tr><td>2026-03-11 18:40</td><td>添加会议纪要和问题复盘</td><td>小云记录</td><td>设计评审会记录</td></tr><tr><td>2026-03-11 18:35</td><td>创建链接汇总</td><td>小云记录</td><td>初始版本</td></tr><tr><td>2026-03-11 18:35</td><td>修复 404 问题</td><td>小云</td><td>文件复制到 fileserver</td></tr></tbody></table></p><p>---</p><p><strong>小云记录</strong>: 📝 让每个文档都有完整的记录，让每次经验都成为成长的阶梯。</p><p>_最后更新：2026-03-11 18:35 | 小云记录 📝_
+
+        </div>
+        
+        <div class="footer">
+            <p>Generated by <strong>小云推书</strong> 📖 | 2026/3/11</p>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                运行环境：阿里云 iZ6weg099z8odxhxeq49hzZ
+            </p>
+        </div>
+    </div>
+    
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">✅ 已复制到剪贴板！</div>
+    
+    <script>
+        // 复制提示词功能
+        function copyPrompt(button) {
+            const prompt = decodeURIComponent(button.getAttribute('data-prompt'));
+            
+            navigator.clipboard.writeText(prompt).then(() => {
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                
+                // 更改按钮文字
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                
+                // 2 秒后恢复
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                // 降级方案：使用 textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                button.textContent = '✅ 已复制';
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = '📋 一键复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

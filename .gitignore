@@ -1,0 +1,7 @@
+# 敏感文件
+.env
+*.log
+node_modules/
+database/*.db
+inbox/
+reports/

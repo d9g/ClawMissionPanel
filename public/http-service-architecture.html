@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP 服务架构文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h1 { font-size: 26px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        h4 { font-size: 16px; }
+        
+        p {
+            margin: 15px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        /* AI 绘图提示词容器 */
+        .prompt-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .prompt-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .prompt-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .prompt-title {
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-content {
+            padding: 20px;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .prompt-header {
+                flex-wrap: wrap;
+            }
+            
+            .prompt-title {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+        }
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* 复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #48bb78;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .highlight h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+            border-bottom: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 HTTP 服务架构文档</h1>
+            <p>小云推书 · 小说推文变现专家</p>
+        </div>
+        
+        <div class="content">
+            <h1>HTTP 服务架构文档</h1></p><p><strong>文档版本</strong>: v1.0
+<strong>创建时间</strong>: 2026-03-11 21:30
+<strong>整理</strong>: 小云写作 ✍️
+<strong>审核</strong>: 小云评委 ⚖️</p><p>---</p><p><h2>📋 概述</h2></p><p>本文档详细描述 <code>yun.webyoung.cn</code> 域名下的 HTTP 服务架构，包括文件服务器和任务公告板系统的部署结构、配置细节和备份策略。</p><p>---</p><p><h2>🏗️ 整体架构</h2></p><p><pre><code class="language-">┌─────────────────────────────────────────────────┐
+│              yun.webyoung.cn (HTTPS)            │
+│                    Nginx                        │
+│              /etc/nginx/conf.d/                 │
+└─────────────────────────────────────────────────┘
+                        │
+        ┌───────────────┴───────────────┐
+        │                               │
+        ▼                               ▼
+┌──────────────┐              ┌──────────────────┐
+│  / (根路径)   │              │  /task-board/    │
+│  文件服务器   │              │  任务公告板      │
+│  Port: 8888  │              │  Port: 3000      │
+│  Python      │              │  Node.js/Express │
+└──────────────┘              └──────────────────┘
+        │                               │
+        ▼                               ▼
+┌──────────────┐              ┌──────────────────┐
+│ /files/      │              │ /src/            │
+│ 静态文件     │              │ 应用代码         │
+│ 文档管理     │              │ 数据库           │
+└──────────────┘              └──────────────────┘
+</code></pre></p><p>---</p><p><h2>📁 目录结构</h2></p><p><h3>文件服务器 (/home/admin/fileserver/)</h3>
+<pre><code class="language-">/home/admin/fileserver/
+├── files/                    # 静态文件根目录
+│   ├── 20260308/            # 按日期组织的文件
+│   ├── 20260309/
+│   ├── 20260310/
+│   ├── 20260311/
+│   ├── articles/            # 文章内容
+│   └── task-board/          # 任务公告板文档
+├── content/                  # 内容管理
+├── cache/                    # 缓存目录
+├── logs/                     # 日志目录
+├── server.py                 # Python 文件服务器
+├── renderer.py               # Markdown 渲染器
+├── article-copyright-manager.py  # 版权管理
+└── nginx.conf                # Nginx 配置
+</code></pre></p><p><h3>任务公告板 (/home/admin/.openclaw/workspace/task-board/)</h3>
+<pre><code class="language-">/home/admin/.openclaw/workspace/task-board/
+├── database/
+│   ├── schema.sql           # 数据库 Schema
+│   └── task-board.db        # SQLite 数据库
+├── src/
+│   ├── server.js            # HTTP 服务主程序
+│   ├── task-manager.js      # 任务管理模块
+│   ├── state-machine.js     # 状态机模块
+│   ├── approval-manager.js  # 审批管理模块
+│   ├── acceptance-manager.js # 验收管理模块
+│   ├── record-keeper.js     # 全程记录模块
+│   └── test.js              # 测试脚本
+├── public/
+│   └── index.html           # 前端页面
+├── logs/
+│   ├── server.log           # 应用日志
+│   └── error.log            # 错误日志
+├── package.json             # Node.js 依赖
+├── task-board.service       # Systemd 服务配置
+├── SYSTEM-DESIGN.md         # 系统设计文档
+└── AGENT-CONFIG.md          # Agent 配置文档
+</code></pre></p><p>---</p><p><h2>🔧 服务配置</h2></p><p><h3>Nginx 配置</h3>
+<strong>位置</strong>: <code>/etc/nginx/conf.d/fileserver.conf</code></p><p><pre><code class="language-nginx">server {
+    server_name yun.webyoung.cn;
+    
+    # 任务公告板
+    location /task-board/ {
+        proxy_pass http://127.0.0.1:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    
+    # 文件服务器
+    location / {
+        proxy_pass http://127.0.0.1:8888;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    
+    # SSL 配置
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/yun.webyoung.cn/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/yun.webyoung.cn/privkey.pem;
+}
+</code></pre></p><p><h3>Systemd 服务</h3></p><p><h4>文件服务器</h4>
+<pre><code class="language-ini">[Unit]
+Description=小云文件服务器
+After=network.target</p><p>[Service]
+Type=simple
+User=admin
+WorkingDirectory=/home/admin/fileserver
+ExecStart=/usr/bin/python3 server.py
+Restart=always</p><p>[Install]
+WantedBy=multi-user.target
+</code></pre></p><p><h4>任务公告板</h4>
+<pre><code class="language-ini">[Unit]
+Description=小云任务管理系统
+After=network.target</p><p>[Service]
+Type=simple
+User=admin
+WorkingDirectory=/home/admin/.openclaw/workspace/task-board
+ExecStart=/usr/bin/node src/server.js
+Restart=always
+Environment=NODE_ENV=production</p><p>[Install]
+WantedBy=multi-user.target
+</code></pre></p><p>---</p><p><h2>🌐 访问路径</h2></p><p><h3>文件服务器</h3>
+| 路径 | 说明 | 示例 |</p><p><table><thead><tr><th><code>/</code></th><th>文件服务器根</th><th>https://yun.webyoung.cn/</th></tr></thead><tbody><tr><td><code>/files/{date}/</code></td><td>日期目录</td><td>https://yun.webyoung.cn/files/20260311/</td></tr><tr><td><code>/articles/</code></td><td>文章内容</td><td>https://yun.webyoung.cn/articles/</td></tr></tbody></table></p><p><h3>任务公告板</h3>
+| 路径 | 说明 | 示例 |</p><p><table><thead><tr><th><code>/task-board/</code></th><th>前端页面</th><th>https://yun.webyoung.cn/task-board/</th></tr></thead><tbody><tr><td><code>/task-board/api/</code></td><td>API 端点</td><td>https://yun.webyoung.cn/task-board/api/</td></tr><tr><td><code>/task-board/api/health</code></td><td>健康检查</td><td>https://yun.webyoung.cn/task-board/api/health</td></tr></tbody></table></p><p>---</p><p><h2>📊 服务管理</h2></p><p><h3>文件服务器</h3>
+<pre><code class="language-bash"><h1>启动</h1>
+sudo systemctl start xiaoyun-fileserver</p><p><h1>停止</h1>
+sudo systemctl stop xiaoyun-fileserver</p><p><h1>重启</h1>
+sudo systemctl restart xiaoyun-fileserver</p><p><h1>状态</h1>
+sudo systemctl status xiaoyun-fileserver</p><p><h1>日志</h1>
+sudo journalctl -u xiaoyun-fileserver -f
+</code></pre></p><p><h3>任务公告板</h3>
+<pre><code class="language-bash"><h1>启动</h1>
+sudo systemctl start task-board</p><p><h1>停止</h1>
+sudo systemctl stop task-board</p><p><h1>重启</h1>
+sudo systemctl restart task-board</p><p><h1>状态</h1>
+sudo systemctl status task-board</p><p><h1>日志</h1>
+sudo journalctl -u task-board -f
+</code></pre></p><p>---</p><p><h2>💾 备份策略</h2></p><p><h3>备份范围</h3>
+备份脚本必须包含以下 HTTP 服务相关文件：</p><p><h4>1. 文件服务器配置</h4>
+<li><code>/home/admin/fileserver/server.py</code></li>
+<li><code>/home/admin/fileserver/renderer.py</code></li>
+<li><code>/home/admin/fileserver/*.py</code></li>
+<li><code>/home/admin/fileserver/files/</code> (所有静态文件)</li>
+<li><code>/home/admin/fileserver/content/</code></li>
+<li><code>/home/admin/fileserver/nginx.conf</code></li></p><p><h4>2. 任务公告板配置</h4>
+<li><code>/home/admin/.openclaw/workspace/task-board/</code> (完整目录)</li>
+  - <code>database/</code> (数据库和 Schema)
+  - <code>src/</code> (所有源代码)
+  - <code>public/</code> (前端文件)
+  - <code>*.md</code> (文档)
+  - <code>package.json</code> (依赖配置)
+  - <code>task-board.service</code> (服务配置)</p><p><h4>3. Nginx 配置</h4>
+<li><code>/etc/nginx/conf.d/fileserver.conf</code></li>
+<li><code>/etc/nginx/sites-enabled/</code> (如有)</li></p><p><h4>4. SSL 证书</h4>
+<li><code>/etc/letsencrypt/live/yun.webyoung.cn/</code></li>
+<li><code>/etc/letsencrypt/options-ssl-nginx.conf</code></li></p><p><h4>5. Systemd 服务配置</h4>
+<li><code>/etc/systemd/system/xiaoyun-fileserver.service</code></li>
+<li><code>/etc/systemd/system/task-board.service</code></li></p><p><h3>恢复流程</h3>
+<li>恢复文件服务器代码和配置</li>
+<li>恢复任务公告板代码和数据库</li>
+<li>恢复 Nginx 配置</li>
+<li>恢复 SSL 证书</li>
+<li>恢复 Systemd 服务配置</li>
+<li>重启所有服务</li></p><p>---</p><p><h2>🔒 安全考虑</h2></p><p><h3>SSL/TLS</h3>
+<li>使用 Let's Encrypt 免费证书</li>
+<li>自动续期（Certbot）</li>
+<li>强制 HTTPS 重定向</li></p><p><h3>访问控制</h3>
+<li>Nginx 反向代理隐藏后端端口</li>
+<li>文件权限设置（644/755）</li>
+<li>服务以非 root 用户运行</li></p><p><h3>日志管理</h3>
+<li>应用日志轮转</li>
+<li>Nginx 访问日志</li>
+<li>错误日志监控</li></p><p>---</p><p><h2>📈 监控建议</h2></p><p><h3>健康检查</h3>
+<pre><code class="language-bash"><h1>文件服务器</h1>
+curl -I https://yun.webyoung.cn/</p><p><h1>任务公告板</h1>
+curl -I https://yun.webyoung.cn/task-board/api/health
+</code></pre></p><p><h3>性能监控</h3>
+<li>响应时间监控</li>
+<li>错误率统计</li>
+<li>资源使用率（CPU/内存）</li></p><p><h3>日志分析</h3>
+<li>访问日志分析</li>
+<li>错误日志告警</li>
+<li>慢查询日志</li></p><p>---</p><p><h2>📝 维护指南</h2></p><p><h3>日常维护</h3>
+<li>检查服务状态</li>
+<li>查看错误日志</li>
+<li>清理旧日志</li>
+<li>更新依赖包</li></p><p><h3>定期维护</h3>
+<li>SSL 证书续期（每 90 天）</li>
+<li>系统安全更新</li>
+<li>备份验证</li>
+<li>性能优化</li></p><p><h3>故障排查</h3>
+<li>检查服务状态</li>
+<li>查看日志</li>
+<li>验证端口监听</li>
+<li>测试网络连接</li></p><p>---</p><p><h2>🔗 相关文档</h2></p><p><li><a href="https://yun.webyoung.cn/task-board/SYSTEM-DESIGN.html" target="_blank">系统设计文档</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/task-board-deployment.html" target="_blank">部署说明</a></li>
+<li><a href="https://yun.webyoung.cn/task-board/backup-restore-guide.html" target="_blank">备份恢复指南</a></li></p><p>---</p><p><strong>小云写作</strong>: ✍️ HTTP 服务架构文档整理完成，包含完整的目录结构、配置细节和备份策略！</p><p>_文档版本：v1.0 | 创建时间：2026-03-11 21:30 | 小云写作 ✍️_
+
+        </div>
+        
+        <div class="footer">
+            <p>Generated by <strong>小云推书</strong> 📖 | 2026/3/11</p>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                运行环境：阿里云 iZ6weg099z8odxhxeq49hzZ
+            </p>
+        </div>
+    </div>
+    
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">✅ 已复制到剪贴板！</div>
+    
+    <script>
+        // 复制提示词功能
+        function copyPrompt(button) {
+            const prompt = decodeURIComponent(button.getAttribute('data-prompt'));
+            
+            navigator.clipboard.writeText(prompt).then(() => {
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                
+                // 更改按钮文字
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                
+                // 2 秒后恢复
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                // 降级方案：使用 textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                // 显示成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                button.textContent = '✅ 已复制';
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    button.textContent = '📋 一键复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
