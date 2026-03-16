@@ -1,4 +1,4 @@
-# OpenMOSS API 接口文档
+# API 接口文档
 
 📖 **统一数据 API 接口规范**
 
