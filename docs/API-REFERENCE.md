@@ -358,7 +358,7 @@ const stats = data.data.stats;
 **解决**:
 ```bash
 # 重启 API 服务
-cd /home/admin/.openclaw/workspace/task-board/backend
+cd <workspace>/task-board/backend
 python3 unified-api.py
 
 # 重载 nginx
@@ -392,7 +392,7 @@ sudo nginx -t && sudo systemctl reload nginx
 ps aux | grep unified-api
 
 # 启动 API 服务
-cd /home/admin/.openclaw/workspace/task-board/backend
+cd <workspace>/task-board/backend
 python3 unified-api.py
 ```
 
@@ -415,7 +415,7 @@ python3 unified-api.py
 ### 启动 API 服务
 
 ```bash
-cd /home/admin/.openclaw/workspace/task-board/backend
+cd <workspace>/task-board/backend
 python3 unified-api.py
 ```
 
