@@ -27,7 +27,7 @@
 ### 1. 项目代码目录（开发用）
 
 ```
-/home/admin/.openclaw/workspace/task-board/
+<workspace>/task-board/
 ├── src/                      # 后端源代码
 │   ├── server.js            # 主服务
 │   ├── dashboard-api.js     # Dashboard API
@@ -55,7 +55,7 @@
 ### 2. HTTP 服务目录（对外服务）
 
 ```
-/home/admin/fileserver/files/          # HTTP 服务根目录
+$HOME/fileserver/files/          # HTTP 服务根目录
 ├── task-board/                        # 任务公告板
 │   ├── index.html                    # 首页
 │   ├── blocked.html                  # 阻塞任务
@@ -87,7 +87,7 @@
 ### 3. 渲染引擎和缓存
 
 ```
-/home/admin/fileserver/
+$HOME/fileserver/
 ├── renderer.py                       # MD → HTML 渲染引擎
 ├── server.py                         # HTTP 服务
 ├── sync-task-board-docs.sh          # 文档同步脚本
@@ -133,9 +133,9 @@ server {
 
 | 资源 | URL | 物理路径 |
 |------|-----|----------|
-| 任务板首页 | https://yun.webyoung.cn/task-board/ | `/home/admin/fileserver/files/task-board/index.html` |
-| 任务板文档 | https://yun.webyoung.cn/task-board/docs/ | `/home/admin/fileserver/files/task-board/docs/` |
-| 产品文档 | https://yun.webyoung.cn/docs/ | `/home/admin/fileserver/files/docs/` |
+| 任务板首页 | https://yun.webyoung.cn/task-board/ | `$HOME/fileserver/files/task-board/index.html` |
+| 任务板文档 | https://yun.webyoung.cn/task-board/docs/ | `$HOME/fileserver/files/task-board/docs/` |
+| 产品文档 | https://yun.webyoung.cn/docs/ | `$HOME/fileserver/files/docs/` |
 | API 接口 | https://yun.webyoung.cn/task-board/api/ | `http://localhost:3000/api/` |
 
 ---
@@ -161,7 +161,7 @@ server {
 **脚本 1**: `sync-task-board-docs.sh`
 ```bash
 #!/bin/bash
-SOURCE_DIR="/home/admin/fileserver/files/task-board"
+SOURCE_DIR="$HOME/fileserver/files/task-board"
 TARGET_DIR="/var/www/yun.webyoung.cn/task-board"
 
 # 复制所有 HTML 文件
@@ -185,7 +185,7 @@ python3 renderer.py build-all
 
 ```bash
 # 1. 在 workspace 开发
-cd /home/admin/.openclaw/workspace/task-board
+cd <workspace>/task-board
 # 编辑代码和文档
 
 # 2. 提交到 Git
@@ -195,11 +195,11 @@ git push origin master
 
 # 3. 同步到 HTTP 目录
 # 手动复制或使用同步脚本
-cp docs/*.md /home/admin/fileserver/files/task-board/docs/
-cp docs/*.html /home/admin/fileserver/files/task-board/docs/
+cp docs/*.md $HOME/fileserver/files/task-board/docs/
+cp docs/*.html $HOME/fileserver/files/task-board/docs/
 
 # 4. 渲染 HTML
-python3 /home/admin/fileserver/renderer.py build-all
+python3 $HOME/fileserver/renderer.py build-all
 ```
 
 ### 发布阶段
