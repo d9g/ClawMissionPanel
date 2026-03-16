@@ -11,7 +11,7 @@
 
 ClawMissionPanel 使用 SQLite 作为数据存储，支持多 Agent 任务调度与监控系统的核心功能。
 
-**数据库位置**: `/home/admin/.openclaw/workspace/task-board/database/task-board.db`
+**数据库位置**: `<workspace>/task-board/database/task-board.db`
 
 **设计原则**:
 - 轻量级、嵌入式、无需独立数据库服务
@@ -315,25 +315,25 @@ GROUP BY status;
 
 ```bash
 # 备份到指定位置
-cp /home/admin/.openclaw/workspace/task-board/database/task-board.db \
-   /home/admin/.openclaw/workspace/person/xiaoyun/backups/xiaoyun/database/task-board-$(date +%Y%m%d-%H%M%S).db
+cp <workspace>/task-board/database/task-board.db \
+   <workspace>/person/xiaoyun/backups/xiaoyun/database/task-board-$(date +%Y%m%d-%H%M%S).db
 ```
 
 ### 恢复数据库
 
 ```bash
 # 从备份恢复
-cp /path/to/backup.db /home/admin/.openclaw/workspace/task-board/database/task-board.db
+cp /path/to/backup.db <workspace>/task-board/database/task-board.db
 ```
 
 ### 数据库优化
 
 ```bash
 # 清理未使用的空间
-sqlite3 /home/admin/.openclaw/workspace/task-board/database/task-board.db "VACUUM;"
+sqlite3 <workspace>/task-board/database/task-board.db "VACUUM;"
 
 # 检查数据库完整性
-sqlite3 /home/admin/.openclaw/workspace/task-board/database/task-board.db "PRAGMA integrity_check;"
+sqlite3 <workspace>/task-board/database/task-board.db "PRAGMA integrity_check;"
 ```
 
 ---
