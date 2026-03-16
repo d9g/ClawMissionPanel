@@ -1,7 +1,7 @@
 #!/bin/bash
-# OpenMOSS 所有 API 服务启动脚本
+# 所有 API 服务启动脚本
 
-echo "🚀 启动 OpenMOSS 所有 API 服务..."
+echo "🚀 启动 所有 API 服务..."
 echo ""
 
 # 检查依赖
