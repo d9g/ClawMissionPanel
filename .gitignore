@@ -1,7 +1,24 @@
 # 敏感文件
 .env
 *.log
-node_modules/
 database/*.db
 inbox/
 reports/
+logs/
+
+# 依赖
+node_modules/
+
+# 系统文件
+*.service
+.DS_Store
+Thumbs.db
+
+# 配置文件（包含敏感信息）
+AGENT-CONFIG.md
+AGENT-CONFIG.html
+SYSTEM-DESIGN.html
+
+# 构建输出
+dist/
+build/

@@ -1,19 +1,23 @@
 #!/bin/bash
-# OpenMOSS 任务认领 API 启动脚本
+# 任务板 API 启动脚本
 
-echo "🚀 启动 OpenMOSS 任务认领 API..."
-echo "📂 工作目录：/home/admin/.openclaw/workspace/task-board"
-echo "🌐 访问地址：http://localhost:6565"
-echo "📖 API 文档：http://localhost:6565/docs"
-echo ""
+cd /home/admin/.openclaw/workspace/task-board
 
-cd /home/admin/.openclaw/workspace/task-board/backend
-
-# 检查依赖
-if ! python3 -c "import fastapi" 2>/dev/null; then
-    echo "❌ 缺少 FastAPI，正在安装..."
-    pip3 install fastapi uvicorn
+# 检查是否已在运行
+if pgrep -f "node.*server.js" > /dev/null; then
+    echo "⚠️  服务已在运行"
+    exit 0
 fi
 
-# 启动 API
-python3 claim-api.py
+# 启动服务
+nohup node src/server.js > logs/server.log 2>&1 &
+echo "✅ 服务已启动 (PID: $!)"
+
+# 等待服务启动
+sleep 3
+if pgrep -f "node.*server.js" > /dev/null; then
+    echo "✅ 服务运行正常"
+else
+    echo "❌ 服务启动失败"
+    exit 1
+fi
