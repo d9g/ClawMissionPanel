@@ -202,6 +202,12 @@
                         <div class="stat-label">📋 全部任务</div>
                     </a>
                 </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);">
+                    <a href="/task-board/acceptance.html" style="color: white; text-decoration: none;">
+                        <div class="stat-number" id="acceptance-tasks">-</div>
+                        <div class="stat-label">✅ 待验收</div>
+                    </a>
+                </div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);">
                     <a href="/task-board/blocked.html?v=202603140920" style="color: white; text-decoration: none;">
                         <div class="stat-number" id="blocked-tasks">-</div>
@@ -220,12 +226,6 @@
                         <div class="stat-label">⏸️ 等待中</div>
                     </a>
                 </div>
-                <div class="stat-card" style="background: linear-gradient(135deg, #ffa502 0%, #ff7f50 100%);">
-                    <a href="/task-board/reviewing.html?v=202603140920" style="color: white; text-decoration: none;">
-                        <div class="stat-number" id="reviewing-tasks">-</div>
-                        <div class="stat-label">📝 审批中</div>
-                    </a>
-                </div>
                 <div class="stat-card">
                     <div class="stat-number" id="completed-tasks">-</div>
                     <a href="/task-board/completed.html?v=202603140920" style="color: white; text-decoration: none;">
@@ -235,36 +235,15 @@
             </div>
         </div>
         
-        <div id="loading" class="loading">
-            加载中...
-        </div>
-        
         <!-- 阻塞任务告警 -->
         <div class="blocked-alert" id="blocked-alert" style="display: none;">
             <h3>🚨 阻塞任务</h3>
             <div id="blocked-tasks-list"></div>
         </div>
         
-        <div class="board" id="board" style="display: none;">
-            <div class="column">
-                <div class="column-header">🟡 进行中</div>
-                <div id="progress-column"></div>
-            </div>
-            
-            <div class="column">
-                <div class="column-header">⏸️ 等待中</div>
-                <div id="pending-column"></div>
-            </div>
-            
-            <div class="column">
-                <div class="column-header">✅ 已完成</div>
-                <div id="completed-column"></div>
-            </div>
         </div>
-    </div>
     
-    <script src="/task-board/js/update-stats.js?v=202603140925"></script>
-    <script src="/task-board/js/task-lists.js?v=202603140900"></script>
-    <script src="/task-board/js/dashboard.js?v=202603140925"></script>
+    <script src="/task-board/js/update-stats.js?v=202603191507"></script>
+    <script src="/task-board/js/dashboard.js?v=202603191507"></script>
 </body>
 </html>

@@ -115,7 +115,7 @@
     </div>
     
     <script>
-        const API_ALL = '/api/tasks';
+        const API_ALL = '/task-board/api/tasks';
         
         async function loadTasks() {
             document.getElementById('loading').style.display = 'block';
@@ -154,7 +154,7 @@
             taskList.innerHTML = tasks.map(task => `
                 <li class="task-item">
                     <div class="task-header">
-                        <a href="/task-board/tasks/${task.id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
+                        <a href="/task-board/tasks/${task.task_id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
                         <span class="completed-badge">✅ 已完成</span>
                     </div>
                     <div class="task-meta">

@@ -1,6 +1,6 @@
 /**
  * 任务列表渲染脚本
- * 负责在首页显示任务列表
+ * v2.0 - 适配统一服务 API 格式
  */
 
 /**
@@ -12,7 +12,8 @@ function updateBlockedAlert(data) {
   
   if (!container || !listContainer) return;
   
-  const blocked = data.data?.blocked || [];
+  const allTasks = data.data?.all || [];
+  const blocked = allTasks.filter(t => t.status === 'BLOCKED' || t.status === 'ON_HOLD');
   
   if (blocked.length === 0) {
     container.style.display = 'none';
@@ -44,13 +45,15 @@ function updateTaskLists(data) {
   
   const allTasks = data.data?.all || [];
   
+  console.log('[TaskLists] 任务列表:', allTasks.length, '个任务');
+  
   // 进行中任务
-  const inProgress = allTasks.filter(t => t.status === 'IN_PROGRESS');
+  const inProgress = allTasks.filter(t => t.status === 'IN_PROGRESS' || t.status === 'REVIEWING');
   progressColumn.innerHTML = inProgress.map(task => createTaskCard(task)).join('') || 
     '<div class="empty-column">暂无任务</div>';
   
-  // 等待中任务（PENDING 和 ASSIGNED）
-  const pending = allTasks.filter(t => t.status === 'PENDING' || t.status === 'ASSIGNED');
+  // 等待中任务（PENDING 和 AVAILABLE）
+  const pending = allTasks.filter(t => t.status === 'PENDING' || t.status === 'AVAILABLE');
   pendingColumn.innerHTML = pending.map(task => createTaskCard(task)).join('') || 
     '<div class="empty-column">暂无任务</div>';
   
@@ -91,22 +94,5 @@ function createTaskCard(task) {
   `;
 }
 
-/**
- * 更新统计显示
- */
-function updateStatsDisplay(data) {
-  // 更新顶部统计卡片
-  const totalEl = document.getElementById('total-tasks');
-  const blockedEl = document.getElementById('blocked-tasks');
-  const progressEl = document.getElementById('progress-tasks');
-  const pendingEl = document.getElementById('pending-tasks');
-  const completedEl = document.getElementById('completed-tasks');
-  
-  if (totalEl) totalEl.textContent = data.data?.stats?.total || 0;
-  if (blockedEl) blockedEl.textContent = data.data?.stats?.blocked || 0;
-  if (progressEl) progressEl.textContent = data.data?.stats?.inProgress || 0;
-  if (pendingEl) pendingEl.textContent = data.data?.stats?.pending || 0;
-  if (completedEl) completedEl.textContent = (data.data?.all || []).filter(t => t.status === 'COMPLETED').length;
-  
-  console.log('[Dashboard] 统计显示已更新');
-}
+// 注意：updateStatsDisplay 函数已移到 dashboard.js 统一定义
+// 避免多个文件定义同名函数造成冲突

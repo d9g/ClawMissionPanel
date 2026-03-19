@@ -131,7 +131,7 @@
     </div>
     
     <script>
-        const API_ALL = '/api/tasks';
+        const API_ALL = '/task-board/api/tasks';
         
         async function loadTasks() {
             document.getElementById('loading').style.display = 'block';
@@ -169,8 +169,8 @@
             taskList.innerHTML = tasks.map(task => `
                 <li class="task-item">
                     <div class="task-header">
-                        <a href="/task-board/tasks/${task.id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
-                        <span class="task-id">${task.id}</span>
+                        <a href="/task-board/tasks/${task.task_id}.html" target="_blank" class="task-title-link">${escapeHtml(task.title)}</a>
+                        <span class="task-id">${task.task_id}</span>
                     </div>
                     <div class="task-meta">
                         <div class="meta-item"><span class="meta-label">执行者:</span> ${task.assignee || '未分配'}</div>
